@@ -19,9 +19,7 @@ function Signup() {
     
       const handleSubmit = (e) => {
         e.preventDefault();
-        // Form is valid, you can submit the data to your backend here
-        console.log(JSON.stringify(formData))
-        
+        // Form is valid, you can submit the data to your backend here        
         if(formData.password === formData.confirmPassword){
           const user = {
             name: formData.firstname + ' ' + formData.lastname,
