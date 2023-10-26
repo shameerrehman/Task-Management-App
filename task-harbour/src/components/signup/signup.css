@@ -45,8 +45,22 @@ body{
     @media (max-width: 768px) {
         width: 70vw;
     }
-
-    
+/* forgot password css to be moved to login.css*/
+    .forgot-password {
+        margin-top: 15px;
+        text-align: center;
+    }
+      
+    .forgot-password a {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 15px;
+    }
+      
+    .forgot-password a:hover {
+        text-decoration: underline;
+    }
+      
 }
 input:not([type="checkbox"]){
     padding: 7px;
@@ -73,4 +87,6 @@ input:not([type="checkbox"]){
     .error-btn{
         color: black;
     }
+
+    
 }

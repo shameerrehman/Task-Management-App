@@ -4,6 +4,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Signup from './components/signup/signup';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ForgotPassword from './components/ForgotPassword/ForgotPassword'; 
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,6 +16,10 @@ root.render(
           {/* <Route path="/" element={} /> */}
           <Route path="/signup" element={<Signup />} />
           {/* <Route path="/signin" element={<Signin />} /> */}
+        </Routes>
+        <Routes>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </div>
     </Router>
