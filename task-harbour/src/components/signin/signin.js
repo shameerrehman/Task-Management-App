@@ -6,10 +6,12 @@ function Signin() {
     username: '',
     password: '',
   });
+
   const [isSubmitted, setIsSubmitted] = useState(false);
+  
   const login = (e) => {
     e.preventDefault();
-    fetch('https://knesgczxc3ylg7qs4kfi4pdxvy0grqbc.lambda-url.us-east-1.on.aws', {
+    fetch('https://unthuoqlirikkuba4rasubexvu0rubjj.lambda-url.us-east-1.on.aws/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -17,11 +19,13 @@ function Signin() {
           body: JSON.stringify(formData),
         })
           .then((response) => {
-            if (response.status === 201) {
+            if (response.status === 200) {
               setIsSubmitted(true);
+              window.location.href = '/select-project'
             } else {
               // Handle errors or display a message to the user
               console.error('Error during login:', response.status);
+              const errorMessage = document.createElement('div');
             }
           })
           .catch((error) => {
