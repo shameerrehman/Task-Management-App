@@ -10,7 +10,7 @@ function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    fetch('', {
+    fetch('https://3mtotetvonmshmec7onxkpy76m0wuesj.lambda-url.us-east-1.on.aws/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
