@@ -1,5 +1,5 @@
 import './signup.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 
 function Signup() {
@@ -35,11 +35,19 @@ function Signup() {
           body: JSON.stringify(user),
         })
           .then((response) => {
-            if (response.status === 201) {
-              setIsSubmitted(true);
+            // Check if the response is successful
+            if (!response.ok) {
+              console.error('Network response was not ok');
+            }
+            return response.json();  // parsing the response to JSON
+          })
+          .then(data => {
+            // Handle the data from the server
+            if (data.status !== 201 || data.status !== 200) {
+              console.error('Error:', data);
             } else {
-              // Handle errors or display a message to the user
-              console.error('Error during signup:', response.status);
+              console.log('Success:', data);
+              setIsSubmitted(true);
             }
           })
           .catch((error) => {
@@ -158,7 +166,7 @@ function Signup() {
           </div>
         </form>
       )}
-    
+    <div className='login'><a onClick={() => { window.location.href = '/signin' }}> Already have an account? Login here </a></div>
     <div className='copyright'>Copyright © TaskHarbor </div>
     </div>
   );
