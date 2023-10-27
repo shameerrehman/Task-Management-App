@@ -2,22 +2,31 @@ import React, { useState } from 'react';
 import './forgotPassword.css';
 
 function ForgotPassword() {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    task: 'initiate',
+  });
   const [isEmailSent, setIsEmailSent] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Call your backend API to initiate the password reset process
-    // For example:
-    // const response = await fetch('https://your-lambda-url/reset-password', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email }),
-    // });
-    // if (response.ok) setIsEmailSent(true);
+    fetch('', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        })
+          .then((response) => {
+            if (response.status === 201) {
+              isEmailSent(true);
+            } else {
+              // Handle errors or display a message to the user
+              console.error('Error during signup:', response.status);
+            }
+          })
     
-    console.log('Password reset email sent to:', email);
-    setIsEmailSent(true);
+    console.log('Password reset email sent email for user:', formData.username);
   };
 
   return (
@@ -29,11 +38,13 @@ function ForgotPassword() {
         <form onSubmit={handleSubmit}>
           <div className='row'>
             <input
-              type="email"
-              placeholder="Email"
+              type="text"
+              placeholder="Username"
               required={true}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.username}
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
             />
           </div>
           <div className='submit'>
@@ -41,6 +52,8 @@ function ForgotPassword() {
           </div>
         </form>
       )}
+      <div className='signup'><a onClick={() => { window.location.href = '/signin' }}> &lt;-- Back to signin </a></div>
+      <div className='copyright'>Copyright © TaskHarbour </div>
     </div>
   );
 }

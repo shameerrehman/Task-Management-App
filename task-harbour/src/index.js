@@ -16,9 +16,6 @@ root.render(
           {/* <Route path="/" element={} /> */}
           <Route path="/signup" element={<Signup />} />
           {/* <Route path="/signin" element={<Signin />} /> */}
-        </Routes>
-        <Routes>
-          <Route path="/signup" element={<Signup />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </div>
