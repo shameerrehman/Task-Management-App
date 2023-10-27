@@ -45,7 +45,9 @@ body{
     @media (max-width: 768px) {
         width: 70vw;
     }
-
+    .login{
+        cursor: pointer;
+    }
     
 }
 input:not([type="checkbox"]){

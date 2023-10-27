@@ -166,7 +166,7 @@ function Signup() {
           </div>
         </form>
       )}
-    
+    <div className='login'><a onClick={() => { window.location.href = '/signin' }}> Already have an account? Login here </a></div>
     <div className='copyright'>Copyright © TaskHarbor </div>
     </div>
   );

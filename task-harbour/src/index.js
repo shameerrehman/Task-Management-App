@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Signup from './components/signup/signup';
+import Signin from './components/signin/signin';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,7 +14,7 @@ root.render(
         <Routes>
           {/* <Route path="/" element={} /> */}
           <Route path="/signup" element={<Signup />} />
-          {/* <Route path="/signin" element={<Signin />} /> */}
+          <Route path="/signin" element={<Signin />} />
         </Routes>
       </div>
     </Router>
