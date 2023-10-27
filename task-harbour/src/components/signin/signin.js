@@ -33,12 +33,16 @@ function Signin() {
   return (
     <div className="page">
       <div className="form-box">
-        <div className="page-name"><h1>Login</h1></div>
+        <div className="page-name">
+          <h1>Login</h1>
+        </div>
+    
           <div className="button-box">
             <div id="btn"></div>
             {/* <button type="button" className="toggle-btn" onClick="login()">Login</button>
             <button type="button" className="toggle-btn-two" onClick="signup()">Signup</button> */}
           </div>
+            
           <form id="login" className="input-group" onSubmit={login}>
             <input type="text" className="input-field" placeholder="Username" required
             value={formData.username} 
@@ -53,7 +57,7 @@ function Signin() {
           </form>
           <div className="rememberme">
             <input type="checkbox" id="remember" name="remember"></input>
-            <label for="remember">Remember Me</label>
+            <label htmlFor="remember">Remember Me</label>
           </div>
           <div className="copyright"> Copyright © TaskHarbour</div>
           </div>
