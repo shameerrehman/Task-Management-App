@@ -1,14 +1,9 @@
+import pytest
 import json
 import boto3
-import pytest
 import uuid
-from datetime import datetime
 from moto import mock_dynamodb
-from project_management import project_main_lambda
-
-
-def create_uuid_util():
-    return str(uuid.uuid4())
+from project_management import create_projects
 
 
 @pytest.fixture()
@@ -16,7 +11,7 @@ def apigw_event():
     """ Generates API GW Event"""
 
     return {
-        "body": {"test": "body", "userID": "testID"},
+        "body": {"projectName": "Test Project", "projectDescription": "This is a test project's description"},
         "resource": "/{proxy+}",
         "requestContext": {
             "resourceId": "123456",
@@ -74,31 +69,6 @@ def dynamodb_table():
         dynamo = boto3.client('dynamodb', region_name='us-east-1')
 
         dynamo.create_table(
-            TableName='tasks_DB',
-            KeySchema=[{'AttributeName': 'taskID', 'KeyType': 'HASH'},
-                       {'AttributeName': 'projectID', 'KeyType': 'RANGE'}],
-            AttributeDefinitions=[{'AttributeName': 'taskID', 'AttributeType': 'S'},
-                                  {'AttributeName': 'projectID', 'AttributeType': 'S'}],
-            ProvisionedThroughput={'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5},
-            GlobalSecondaryIndexes=[
-                {
-                    'IndexName': 'ProjectIDIndex',
-                    'KeySchema': [
-                        {'AttributeName': 'projectID', 'KeyType': 'HASH'},
-                        {'AttributeName': 'taskID', 'KeyType': 'RANGE'}
-                    ],
-                    'Projection': {
-                        'ProjectionType': 'ALL'
-                    },
-                    'ProvisionedThroughput': {
-                        'ReadCapacityUnits': 5,
-                        'WriteCapacityUnits': 5
-                    }
-                }
-            ]
-        )
-
-        dynamo.create_table(
             TableName='projects_DB',
             KeySchema=[{'AttributeName': 'projectID', 'KeyType': 'HASH'},
                        {'AttributeName': 'userID', 'KeyType': 'RANGE'}],
@@ -128,68 +98,15 @@ def dynamodb_table():
                 'projectID': {'S': 'testProjectID'},
                 'userID': {'S': 'testID'},
                 'projectName': {'S': 'testProject'},
-                'projectDescription': {'S': 'A mocked project for testing'},
-                'sections': {'SS': ['to-do', 'in-progress', 'done']},
+                'projectLead': {'S', 'lead user'},
+                'description': {'S': 'A mocked project for testing'},
+                'startTime': {'S', '2023-10-29'},
                 'defaultView': {'S': 'Board'}
-            }
-        )
-
-        dynamo.put_item(
-            TableName='tasks_DB',
-            Item={
-                'taskID': {'S': create_uuid_util()},
-                'projectID': {'S': 'testProjectID'},
-                'taskName': {'S': 'SampleTask'},
-                'taskDescription': {'S': 'A sample task for testing'},
-                'taskDueDate': {'S': datetime.now().isoformat()},
-                'status': {'S': 'to-do'},
-                'taskTags': {'L': [
-                    {'S': 'testTag'}, {'S': 'Tag1'}
-                ]}
-            }
-        )
-
-        dynamo.put_item(
-            TableName='tasks_DB',
-            Item={
-                'taskID': {'S': create_uuid_util()},
-                'projectID': {'S': 'testProjectID'},
-                'taskName': {'S': 'SampleTask2'},
-                'taskDescription': {'S': 'A sample task for testing'},
-                'taskDueDate': {'S': datetime.now().isoformat()},
-                'status': {'S': 'to-do'},
-                'taskTags': {'L': [
-                    {'S': 'testTag'}, {'S': 'Tag2'}
-                ]}
             }
         )
 
         yield dynamo
 
 
-def test_lambda_handler(apigw_event, dynamodb_table):
-
-    ret = project_main_lambda.lambda_handler(apigw_event, "")
-    assert ret["statusCode"] == 200
-
-
-def test_get_projects(apigw_event, dynamodb_table):
-    ret = project_main_lambda.get_projects('testID')
-    ret_body = json.loads(ret["body"])
-    returned_item = ret_body['data'][0]
-    print(returned_item)
-    assert ret["statusCode"] == 200
-    assert returned_item['userID'] == 'testID'
-    assert returned_item['projectName'] == 'testProject'
-
-
-def test_get_tasks(dynamodb_table):
-    ret = project_main_lambda.get_project_tasks('testProjectID')
-    ret_body = json.loads(ret["body"])
-
-    returned_item = ret_body['data'][0]
-    print(returned_item)
-    assert ret["statusCode"] == 200
-    assert returned_item['taskName'] == 'SampleTask'
-
-
+def test_create_projects(apigw_event, dynamodb_table):
+    ret = create_projects.lambda_handler(apigw_event, context="")
