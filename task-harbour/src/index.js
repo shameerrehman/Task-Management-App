@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Signup from './components/signup/signup';
+import NavBar from './components/navbar/navbar';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
+      <NavBar/>
       <div>
         <Routes>
           {/* <Route path="/" element={} /> */}
