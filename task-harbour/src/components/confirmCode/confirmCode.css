@@ -1,0 +1,63 @@
+body{
+  background-color: #00243C;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #00243C;
+}
+
+.ConfirmCode{
+  background-color: #FAFAFA;
+  border-radius: 30px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  width: 45vw;
+
+  .success-msg{
+    color: green;
+    font-weight: bold;
+  }
+
+  .row{
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      padding: 5px 0px;
+  }
+
+  .copyright{
+      color: gray;
+      font-size: 15px;
+      position: absolute;
+      bottom: 5px;
+  }
+
+  .submit button{
+      padding: 1.5vh 8vw;
+      margin-top: 10px;
+      background-color: #00243C;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      border-radius: 15px;
+  }
+  @media (max-width: 768px) {
+      width: 70vw;
+  }
+      
+}
+  input:not([type="checkbox"]){
+    padding: 7px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0px 1px 10px 1px rgba(0, 0, 0, 0.1);
+  }
+  
+
