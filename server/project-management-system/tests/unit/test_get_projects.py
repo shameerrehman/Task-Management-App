@@ -3,15 +3,15 @@ import json
 import boto3
 import uuid
 from moto import mock_dynamodb
-from project_management import create_projects
+from project_management import get_projects
 
 
 @pytest.fixture()
 def apigw_event():
     """ Generates API GW Event"""
-
+    item = {"userID": "testID"}
     return {
-        "body": {"projectName": "Test Project", "projectDescription": "This is a test project's description"},
+        "body": item,
         "resource": "/{proxy+}",
         "requestContext": {
             "resourceId": "123456",
@@ -98,15 +98,41 @@ def dynamodb_table():
                 'projectID': {'S': 'testProjectID'},
                 'userID': {'S': 'testID'},
                 'projectName': {'S': 'testProject'},
-                'projectLead': {'S', 'lead user'},
+                'projectLead': {'S': 'lead user'},
                 'description': {'S': 'A mocked project for testing'},
-                'startTime': {'S', '2023-10-29'},
-                'defaultView': {'S': 'Board'}
+                'teamMembers': {'SS': ['Joseph', 'Atheesh', 'Ashreet', 'Shameer', 'Saiharan', 'Farouk']},
+                'startTime': {'S': '2023-10-29'},
+                'endTime': {'S': '2025-10-29'},
+            }
+        )
+        dynamo.put_item(
+            TableName='projects_DB',
+            Item={
+                'projectID': {'S': 'testProjectID2'},
+                'userID': {'S': 'testID'},
+                'projectName': {'S': 'testProject2'},
+                'projectLead': {'S': 'lead user'},
+                'description': {'S': 'A mocked project for testing'},
+                'teamMembers': {'SS': ['Joseph', 'Atheesh', 'Ashreet', 'Shameer', 'Saiharan', 'Farouk']},
+                'startTime': {'S': '2023-11-29'},
+                'endTime': {'S': '2025-10-29'},
             }
         )
 
         yield dynamo
 
 
-def test_create_projects(apigw_event, dynamodb_table):
-    ret = create_projects.lambda_handler(apigw_event, context="")
+def test_get_projects(apigw_event, dynamodb_table):
+    ret = get_projects.lambda_handler(apigw_event, context="")
+    ret_body = json.loads(ret["body"])
+
+    returned_item = ret_body['data'][0]
+    print(returned_item)
+    assert ret["statusCode"] == 200
+    assert returned_item['userID'] == 'testID'
+    assert returned_item['projectName'] == 'testProject'
+
+    returned_item2 = ret_body['data'][1]
+    print(returned_item2)
+    assert returned_item2['userID'] == 'testID'
+    assert returned_item2['projectName'] == 'testProject2'

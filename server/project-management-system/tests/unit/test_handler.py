@@ -173,16 +173,6 @@ def test_lambda_handler(apigw_event, dynamodb_table):
     assert ret["statusCode"] == 200
 
 
-def test_get_projects(apigw_event, dynamodb_table):
-    ret = project_main_lambda.get_projects('testID')
-    ret_body = json.loads(ret["body"])
-    returned_item = ret_body['data'][0]
-    print(returned_item)
-    assert ret["statusCode"] == 200
-    assert returned_item['userID'] == 'testID'
-    assert returned_item['projectName'] == 'testProject'
-
-
 def test_get_tasks(dynamodb_table):
     ret = project_main_lambda.get_project_tasks('testProjectID')
     ret_body = json.loads(ret["body"])
