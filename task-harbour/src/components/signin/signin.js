@@ -25,6 +25,19 @@ function Signin() {
               // Handle errors or display a message to the user
               console.error('Error during login:', response.status);
               const errorMessage = document.createElement('div');
+              errorMessage.className = 'error'
+              errorMessage.textContent = "Invalid Credentials, Please try again.";
+              const errorClose = document.createElement('a')
+              errorClose.className = 'error-btn'
+              errorClose.addEventListener("click", function() {
+                const errorElements = document.getElementsByClassName('error');
+                for (let i = 0; i < errorElements.length; i++) {
+                    errorElements[i].style.display = 'none';
+                }
+            });
+              errorClose.textContent = "X";
+              errorMessage.appendChild(errorClose);
+              document.getElementById('root').appendChild(errorMessage);
             }
           })
           .then((responseJson)=>{
