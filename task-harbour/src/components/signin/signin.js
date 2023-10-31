@@ -20,13 +20,21 @@ function Signin() {
         })
           .then((response) => {
             if (response.status === 200) {
-              setIsSubmitted(true);
-              window.location.href = '/select-project'
+              return response.json()
             } else {
               // Handle errors or display a message to the user
               console.error('Error during login:', response.status);
               const errorMessage = document.createElement('div');
             }
+          })
+          .then((responseJson)=>{
+            let authData = {
+              "username" :  formData.username,
+              "authInfo" : responseJson.authenticationResult
+            }
+            localStorage.setItem("authData", JSON.stringify(authData) );
+            setIsSubmitted(true);
+            window.location.href = '/select-project'
           })
           .catch((error) => {
             console.error('Error during login:', error);
