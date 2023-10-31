@@ -3,27 +3,11 @@ a, a:hover, a:visited, a:active {
     text-decoration: none;
    }
 
-.dropdown-content {
-    display: none;
-    padding: 10px;
-    /* padding: 1.5vh 10vw; */
-    /* margin-top: 10px; */
-    background-color: #00243C;
-    color: black;
-    font-weight: bold;
-    font-size: 20px;
-    list-style-type: none
-    /* border-radius: 15px; */
-}
-
-.newProject {
-    /* padding: 1.5vh 10vw; */
-    /* margin-top: 10px; */
-    background-color: #00243C;
-    color: white;
-    font-weight: bold;
-    font-size: 20px;
-    border-radius: 15px;
+.div-icon {
+    width: 35px;
+    height: 5px;
+    background-color: black;
+    margin: 6px 0;
 }
 
 .dropdown{
@@ -36,14 +20,46 @@ a, a:hover, a:visited, a:active {
 .dropdown:hover .dropdown-content {
     display: block;
     position: absolute;
+    top:0;
+    left:0;
     height: 95%;
     background-color: #FAFAFA;
 }
 
-.div-icon {
-    width: 35px;
-    height: 5px;
-    background-color: black;
-    margin: 6px 0;
+.dropdown-content {
+    display: none;
+    padding: 10px;
+    background-color: #00243C;
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    list-style-type: none;
+    width: 200px;
+    position:relative
+}
 
+.newProject {
+    padding: 1.5vh 3vw;
+    /* margin-top: 10px; */
+    background-color: #00243C;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 15px;
+}
+
+.projectlink{
+    font-weight: normal;
+
+}
+
+.nameAndDot{
+    display: inline-block;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
   }
