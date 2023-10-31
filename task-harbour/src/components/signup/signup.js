@@ -164,19 +164,12 @@ function Signup() {
           <div className='submit'>
             <button type="submit">Sign Up</button>
           </div>
-          /* forgot password link to be moved to login page */
-          <div className='forgot-password'>
-            <a href="/forgot-password">Forgot your password?</a>
-          </div>
-
         </form>
       )}
     <div className='login'><a onClick={() => { window.location.href = '/signin' }}> Already have an account? Login here </a></div>
     <div className='copyright'>Copyright © TaskHarbor </div>
     </div>
   );
-
-
 }
 
 export default Signup;
