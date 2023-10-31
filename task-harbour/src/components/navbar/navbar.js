@@ -4,42 +4,58 @@ import { useState } from "react";
 
 function NavBar() {
     const location = useLocation();
-    const [fakeProjects, setFakeProjects] = useState({
-        projects : [
-            { 'name': 'Project 1', 'url': 'project1', 'color': 'red' },
-            { 'name': 'Project 2', 'url': 'project2', 'color': 'green' },
-            { 'name': 'Project 3', 'url': 'project3', 'color': 'blue' }
-        ],
-        currentNum : 3,
-        colors : ['red','green','blue','purple','yellow']
-    })
-    function fakeProjectHelper(){
-        
+    const [projectsList, setProjectsList] = useState()
+    const formData = { userID: JSON.parse(localStorage.getItem("authData")).username }
+
+    function projectHelper() {
+        if (projectsList) {
+            return
+        }
+        fetch('https://rsf6bjt4de6goirsyfvxfs2zdy0vquva.lambda-url.us-east-1.on.aws/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        }).then(response => {
+            return response.json()
+        }).then(data => {
+            let colorDict = {}
+            data['data'].forEach(project => {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                colorDict[project.projectID] = color
+            })
+            data['color'] = colorDict
+            setProjectsList(data)
+        })
     }
-    function loginHelper(){
-        console.log("test")
+    function loginHelper() {
         try {
-            console.log(JSON.parse(localStorage.getItem("authData")).authInfo.AccessToken)
+            let token = JSON.parse(localStorage.getItem("authData")).authInfo.AccessToken
+            projectHelper()
             return true
         } catch (error) {
-            console.log(error)
             return false
         }
     }
-    function tempLogout(){
+    function tempLogout() {
         localStorage.removeItem("authData")
     }
     return (
-        <div class="navbar">
-            <div class="dropdown">
-                <button class="dropbtn">
-                    <div class="div-icon"></div>
-                    <div class="div-icon"></div>
-                    <div class="div-icon"></div>
+        <div className="navbar">
+            <div className="dropdown">
+                <button className="dropbtn">
+                    <div className="div-icon"></div>
+                    <div className="div-icon"></div>
+                    <div className="div-icon"></div>
                 </button>
-                <div class="dropdown-content">
+                <div className="dropdown-content">
                     <h2>
-                    Task Harbor
+                        Task Harbor
                     </h2>
                     {/* Not Signed In Navbar */}
                     {!loginHelper() && (<>
@@ -60,10 +76,10 @@ function NavBar() {
                         </li>
                     </>)}
                     {/* Signed In Navbar */}
-                    {loginHelper()   && (<>
+                    {loginHelper() && (<>
                         <li >
                             <NavLink to="/projectCreation">
-                                <div class="newProject">New Project</div>
+                                <div className="newProject">New Project</div>
                             </NavLink>
                         </li>
                         <li>
@@ -75,16 +91,20 @@ function NavBar() {
                             <NavLink to="/select-project">
                                 Projects
                             </NavLink>
-                            {(() => {
-                                let projectsLinks = [];
-                                fakeProjects.projects.forEach(project => {
-                                    let urllink = "/projects/" + project.url
-                                    let color = project.color
-                                    projectsLinks.push(<li class="projectlink"><NavLink to={urllink} ><div class="nameAndDot"><span style={{ backgroundColor:color }} class="dot"/> {project.name}</div></NavLink></li>)
-                                });
-                                return projectsLinks
-                            })()}
                         </li>
+                        {/* List projects in Navbar */}
+                        {(() => {
+                            let projectsLinks = [];
+                            if (!projectsList) {
+                                return
+                            }
+                            projectsList['data'].forEach(project => {
+                                let urllink = "/projects/" + project.projectID
+                                var color = projectsList['color'][project.projectID]
+                                projectsLinks.push(<li key={project.projectID} className="projectlink"><NavLink to={urllink} ><div className="nameAndDot"><span style={{ backgroundColor: color }} className="dot" /> {project.projectName}</div></NavLink></li>)
+                            })
+                            return projectsLinks
+                        })()}
                         <li>
                             <NavLink to="/logout" onClick={tempLogout}>
                                 Logout
