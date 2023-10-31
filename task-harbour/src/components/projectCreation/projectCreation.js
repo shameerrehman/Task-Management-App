@@ -30,7 +30,7 @@ function ProjectCreation() {
         try {
             return (JSON.parse(localStorage.getItem("authData")).username)
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             return 'not_logged_in'
             
         }
