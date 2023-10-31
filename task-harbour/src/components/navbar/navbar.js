@@ -4,10 +4,6 @@ import { useState } from "react";
 
 function NavBar() {
     const location = useLocation();
-    let signedIn = true;
-    const [fakeLogin, setFakeLogin] = useState({
-        loggedIn: false
-    })
     const [fakeProjects, setFakeProjects] = useState({
         projects : [
             { 'name': 'Project 1', 'url': 'project1', 'color': 'red' },
@@ -20,8 +16,18 @@ function NavBar() {
     function fakeProjectHelper(){
         
     }
-    function fakeLoginHelper(){
-        // setFakeLogin({loggedIn:!fakeLogin.loggedIn})
+    function loginHelper(){
+        console.log("test")
+        try {
+            console.log(JSON.parse(localStorage.getItem("authData")).authInfo.AccessToken)
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
+    function tempLogout(){
+        localStorage.removeItem("authData")
     }
     return (
         <div class="navbar">
@@ -36,7 +42,7 @@ function NavBar() {
                     Task Harbor
                     </h2>
                     {/* Not Signed In Navbar */}
-                    {!fakeLogin.loggedIn && (<>
+                    {!loginHelper() && (<>
                         <li>
                             <NavLink to="/">
                                 Home
@@ -48,13 +54,13 @@ function NavBar() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/signin" onClick={fakeLoginHelper}>
+                            <NavLink to="/signin">
                                 Login
                             </NavLink>
                         </li>
                     </>)}
                     {/* Signed In Navbar */}
-                    {fakeLogin.loggedIn && (<>
+                    {loginHelper()   && (<>
                         <li >
                             <NavLink to="/projectCreation">
                                 <div class="newProject">New Project</div>
@@ -80,7 +86,7 @@ function NavBar() {
                             })()}
                         </li>
                         <li>
-                            <NavLink to="/logout" onClick={fakeLoginHelper}>
+                            <NavLink to="/logout" onClick={tempLogout}>
                                 Logout
                             </NavLink>
                         </li>
