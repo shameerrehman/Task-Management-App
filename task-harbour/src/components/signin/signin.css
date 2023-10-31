@@ -7,9 +7,10 @@ body{
     color: #00243C;
 }
 
-.Signup{
+.Signin{
     background-color: #FAFAFA;
     border-radius: 30px;
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -27,10 +28,12 @@ body{
 
     }
 
-    .piv-policy, .copyright{
+    .copyright{
         color: gray;
-        padding-top: 20px;
         font-size: 15px;
+        position: absolute;
+        bottom: 5px;
+        
     }
 
     .submit button{
@@ -45,9 +48,16 @@ body{
     @media (max-width: 768px) {
         width: 70vw;
     }
-    .login{
+    .signup{
         cursor: pointer;
+        margin-top: 15px;
     }
+   .forgot-password{
+    position: absolute;
+    cursor: pointer;
+    bottom: 30px;
+   } 
+    
 }
 input:not([type="checkbox"]){
     padding: 7px;
@@ -74,6 +84,4 @@ input:not([type="checkbox"]){
     .error-btn{
         color: black;
     }
-
-    
 }
