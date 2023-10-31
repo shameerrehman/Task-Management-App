@@ -10,13 +10,13 @@ function ProjectCreation() {
         // do error check for date format dd-mm-yyyy
         projectName: '',
         //  projectType: '', // is it necessary??? string
-        // teamMembers: '', - temporarily on hold (look into database design) - add a + and it creates a textbox to add team member into the list
+        teamMembers: '', // temporarily on hold (look into database design) - add a + and it creates a textbox to add team member into the list
         description: '',
         projectLead: '', // whoever created it USERID (DISPLAY NAME NOT ID on frontend) - drop down to get all users and select a user for lead (UUID)
         // teams??
         startTime: '', // string YYYY-MM-DD check if the end date is not before the start date
         endTime: '',
-        UserID: '',
+        userID: '',
         // goes to homepage and updates the nav bar
     });
 
@@ -26,20 +26,32 @@ function ProjectCreation() {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
 
+    function projectLeader () {
+        try {
+            return (JSON.parse(localStorage.getItem("authData")).username)
+        } catch (error) {
+            console.log(error)
+            return 'not_logged_in'
+            
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // if (formData.password === formData.confirmPassword) { // MAKE TO IF USER IS LOGGED IN!!!!!!!!!!!!!!!!!!!!!!
+
         const project_create = {
             projectName: formData.projectName,
             // projectType: formData.projectType,
-            // teamMembers: formData.members,
+            teamMembers: 'asdfukgafhs', //formData.members,
             // team: formData.team,
             description: formData.description,
             // files: formData.files,
             projectLead: formData.projectLead,
-            startTime: formData.startDate,
-            endTime: formData.endDate,
+            startTime: startDate,
+            endTime: endDate,
+            userID: projectLeader() // formData.userID
         }
+
         fetch('https://c4ymylf7x27766avx4ms2huavi0xxahb.lambda-url.us-east-1.on.aws/', {
             method: 'POST',
             headers: {
@@ -52,17 +64,17 @@ function ProjectCreation() {
                 if (!response.ok) {
                     console.error('Network response was not ok');
                 }
-                return response.json();  // parsing the response to JSON
+                return response.text();  // parsing the response to JSON
             })
             .then(data => {
                 // Handle the data from the server
-                if (data.status !== 201 || data.status !== 200) {
-                    console.error('Error:', data);
-                } else {
+                // if (data.status !== 201 || data.status !== 200) {       
+                //     console.error('Error:', data);
+                // } else {
                     console.log('Success:', data);
                     setIsSubmitted(true);
                     window.location.href = '/select-project'
-                }
+                // }
             })
             .catch((error) => {
                 console.error('Error creating new project:', error);
