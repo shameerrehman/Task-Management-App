@@ -7,7 +7,7 @@ body{
     color: #00243C;
 }
 
-.Signup{
+.ProjectCreation{
     background-color: #FAFAFA;
     border-radius: 30px;
     display: flex;
@@ -27,14 +27,8 @@ body{
 
     }
 
-    .piv-policy, .copyright{
-        color: gray;
-        padding-top: 20px;
-        font-size: 15px;
-    }
-
-    .submit button{
-        padding: 1.5vh 10vw;
+    .create button{
+        padding: 1.5vh 5vw;
         margin-top: 10px;
         background-color: #00243C;
         color: white;
@@ -45,16 +39,7 @@ body{
     @media (max-width: 768px) {
         width: 70vw;
     }
-    .login{
-        cursor: pointer;
-    }
-}
-input:not([type="checkbox"]){
-    padding: 7px;
-    width: 100%;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0px 1px 10px 1px rgba(0, 0, 0, 0.1);
+    
 }
 
 .error{
@@ -74,6 +59,4 @@ input:not([type="checkbox"]){
     .error-btn{
         color: black;
     }
-
-    
 }
