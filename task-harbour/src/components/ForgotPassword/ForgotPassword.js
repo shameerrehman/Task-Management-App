@@ -18,11 +18,12 @@ function ForgotPassword() {
           body: JSON.stringify(formData),
         })
           .then((response) => {
-            if (response.status === 201) {
-              isEmailSent(true);
+            if (response.status === 200) {
+              setIsEmailSent(true);
+              window.location.href = '/confirm-code';
             } else {
               // Handle errors or display a message to the user
-              console.error('Error during signup:', response.status);
+              console.error('Error during password reset:', response.status);
             }
           })
     
@@ -52,7 +53,7 @@ function ForgotPassword() {
           </div>
         </form>
       )}
-      <div className='signup'><a onClick={() => { window.location.href = '/signin' }}> &lt;-- Back to signin </a></div>
+      <div className='signin'><a onClick={() => { window.location.href = '/signin' }}> &lt;-- Back to signin </a></div>
       <div className='copyright'>Copyright © TaskHarbour </div>
     </div>
   );

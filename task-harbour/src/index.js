@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import Signup from './components/signup/signup';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword'; 
+import ConfirmCode from './components/confirmCode/confirmCode';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -17,6 +18,7 @@ root.render(
           <Route path="/signup" element={<Signup />} />
           {/* <Route path="/signin" element={<Signin />} /> */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/confirm-code" element={<ConfirmCode />} />
         </Routes>
       </div>
     </Router>
