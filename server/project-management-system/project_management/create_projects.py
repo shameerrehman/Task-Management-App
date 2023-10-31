@@ -1,5 +1,6 @@
 import boto3
 import uuid
+import json
 
 
 def create_uuid_util():
@@ -8,10 +9,11 @@ def create_uuid_util():
 
 def lambda_handler(event, context):
     try:
+        event_body = json.loads(event['body'])
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table("projects_DB")
 
-        project_information = event.get('body')
+        project_information = json.loads(event.get('body'))
 
         required_fields = ["userID", "projectName", "description"]
 
@@ -21,10 +23,10 @@ def lambda_handler(event, context):
                     'statusCode': 400,
                     'body': f'Missing required field: {field}'
                 }
-
+            
         item = {
             'projectID': create_uuid_util(),
-            'userID': project_information['userID'],
+            'userID': project_information['userID'], 
             'projectName': project_information['projectName'],
             'projectLead': project_information['projectLead'],
             'description': project_information['description'],
@@ -37,12 +39,12 @@ def lambda_handler(event, context):
 
         return {
             'statusCode': 200,
-            'body': 'Item added to table',
+            'body':'Item added to table',
             'response': response
         }
 
     except Exception as e:
         return {
             'statusCode': 500,
-            'body': 'An error occurred: ' + str(e)
+            'body': 'An error occurred: ' + str(e) + ' data was' + str(project_information)
         }
