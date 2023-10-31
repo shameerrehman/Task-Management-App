@@ -48,7 +48,6 @@ body{
     .login{
         cursor: pointer;
     }
-    
 }
 input:not([type="checkbox"]){
     padding: 7px;
@@ -75,4 +74,6 @@ input:not([type="checkbox"]){
     .error-btn{
         color: black;
     }
+
+    
 }

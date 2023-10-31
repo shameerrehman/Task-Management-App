@@ -4,7 +4,10 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Signup from './components/signup/signup';
 import Signin from './components/signin/signin';
+import ForgotPassword from './components/ForgotPassword/ForgotPassword'; 
+import ConfirmCode from './components/confirmCode/confirmCode';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +18,8 @@ root.render(
           {/* <Route path="/" element={} /> */}
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/confirm-code" element={<ConfirmCode />} />
         </Routes>
       </div>
     </Router>
