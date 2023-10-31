@@ -1,14 +1,28 @@
 import { NavLink, useLocation } from "react-router-dom";
 import './navbar.css';
+import { useState } from "react";
 
 function NavBar() {
     const location = useLocation();
     let signedIn = true;
-    const projects = [
-        { 'name': 'Project 1', 'url': 'project1', 'color': 'red' },
-        { 'name': 'Project 2', 'url': 'project2', 'color': 'green' },
-        { 'name': 'Project 3', 'url': 'project3', 'color': 'blue' }
-    ]
+    const [fakeLogin, setFakeLogin] = useState({
+        loggedIn: false
+    })
+    const [fakeProjects, setFakeProjects] = useState({
+        projects : [
+            { 'name': 'Project 1', 'url': 'project1', 'color': 'red' },
+            { 'name': 'Project 2', 'url': 'project2', 'color': 'green' },
+            { 'name': 'Project 3', 'url': 'project3', 'color': 'blue' }
+        ],
+        currentNum : 3,
+        colors : ['red','green','blue','purple','yellow']
+    })
+    function fakeProjectHelper(){
+        
+    }
+    function fakeLoginHelper(){
+        // setFakeLogin({loggedIn:!fakeLogin.loggedIn})
+    }
     return (
         <div class="navbar">
             <div class="dropdown">
@@ -22,7 +36,7 @@ function NavBar() {
                     Task Harbor
                     </h2>
                     {/* Not Signed In Navbar */}
-                    {!signedIn && (<>
+                    {!fakeLogin.loggedIn && (<>
                         <li>
                             <NavLink to="/">
                                 Home
@@ -34,15 +48,15 @@ function NavBar() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/login">
+                            <NavLink to="/signin" onClick={fakeLoginHelper}>
                                 Login
                             </NavLink>
                         </li>
                     </>)}
                     {/* Signed In Navbar */}
-                    {signedIn && (<>
+                    {fakeLogin.loggedIn && (<>
                         <li >
-                            <NavLink to="/">
+                            <NavLink to="/projectCreation">
                                 <div class="newProject">New Project</div>
                             </NavLink>
                         </li>
@@ -52,12 +66,12 @@ function NavBar() {
                             </NavLink>
                         </li>
                         <li>
-                            <NavLink to="/projects">
+                            <NavLink to="/select-project">
                                 Projects
                             </NavLink>
                             {(() => {
                                 let projectsLinks = [];
-                                projects.forEach(project => {
+                                fakeProjects.projects.forEach(project => {
                                     let urllink = "/projects/" + project.url
                                     let color = project.color
                                     projectsLinks.push(<li class="projectlink"><NavLink to={urllink} ><div class="nameAndDot"><span style={{ backgroundColor:color }} class="dot"/> {project.name}</div></NavLink></li>)
@@ -66,7 +80,7 @@ function NavBar() {
                             })()}
                         </li>
                         <li>
-                            <NavLink to="/logout">
+                            <NavLink to="/logout" onClick={fakeLoginHelper}>
                                 Logout
                             </NavLink>
                         </li>

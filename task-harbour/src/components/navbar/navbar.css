@@ -17,6 +17,7 @@ a, a:hover, a:visited, a:active {
     height: 100%;
 }
 
+/* .dropdown:hover */
 .dropdown:hover .dropdown-content {
     display: block;
     position: absolute;
