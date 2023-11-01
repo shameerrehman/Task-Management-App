@@ -3,25 +3,24 @@ import './emailVerification.css';
 
 function EmailVerification() {
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
     username: '',
-    password: '',
-    confirmPassword: '',
-    isPrivacyChecked: false,
-    code: '',
-    verificationCode: ''
+    verificationCode: '',
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    const user = {
+      username: formData.username,
+      verification_code: formData.verification_code
+    };
     const verificationData = {
       code: formData.verificationCode,
-      // Add the other backend fields for verification
     };
-
+  const handleResendCode = () => {
+    const user = {
+      resend_code: "true",
+      username: formData.username
+    };
     fetch('https://knesgczxc3ylg7qs4kfi4pdxvy0grqbc.lambda-url.us-east-1.on.aws/verify-email', {
       method: 'POST',
       headers: {
@@ -70,6 +69,9 @@ function EmailVerification() {
           <button type="submit">Verify</button>
         </div>
       </form>
+      <div className='resend-code'>
+         <button onClick={handleResendCode}>Resend Code</button>
+      </div>
       <div className='signin'>
         <a onClick={() => { window.location.href = '/signin' }}>
           &lt;-- Back to signin
