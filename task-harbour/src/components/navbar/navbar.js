@@ -5,12 +5,12 @@ import { useState } from "react";
 function NavBar() {
     const location = useLocation();
     const [projectsList, setProjectsList] = useState()
-    const formData = { userID: JSON.parse(localStorage.getItem("authData")).username }
 
     function projectHelper() {
         if (projectsList) {
             return
         }
+        const formData = { userID: JSON.parse(localStorage.getItem("authData")).username }
         fetch('https://rsf6bjt4de6goirsyfvxfs2zdy0vquva.lambda-url.us-east-1.on.aws/', {
             method: 'POST',
             headers: {
