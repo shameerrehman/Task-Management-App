@@ -3,66 +3,136 @@ import './emailVerification.css';
 
 function EmailVerification() {
   const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
     username: '',
-    password: '',
-    confirmPassword: '',
-    isPrivacyChecked: false,
-    code: '',
-    verificationCode: ''
+    verification_code: ''
   });
+
+  const resendCode = async () => {
+    console.log(formData.username === '')
+    const resendData = {
+      username: formData.username,
+      resend_code: "true",
+    }
+    if (formData.username === ''){
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'error'
+      errorMessage.textContent = "Username is blank";
+      const errorClose = document.createElement('a')
+      errorClose.className = 'error-btn'
+      errorClose.addEventListener("click", function() {
+        const errorElements = document.getElementsByClassName('error');
+        for (let i = 0; i < errorElements.length; i++) {
+            errorElements[i].style.display = 'none';
+        }
+    });
+      errorClose.textContent = "X";
+      errorMessage.appendChild(errorClose);
+      document.getElementById('root').appendChild(errorMessage);
+    }
+    else{
+      fetch('https://knesgczxc3ylg7qs4kfi4pdxvy0grqbc.lambda-url.us-east-1.on.aws', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resendData),
+      })
+      .then((response) => {
+        const successMessage = document.createElement('div');
+        successMessage.className = 'success'
+        successMessage.textContent = "Code Resent Successful! Please check your email for a new code.";
+        const successClose = document.createElement('a')
+        successClose.className = 'error-btn'
+        successClose.addEventListener("click", function() {
+          const successElements = document.getElementsByClassName('success');
+          for (let i = 0; i < successElements.length; i++) {
+            successElements[i].style.display = 'none';
+          }
+      });
+        successClose.textContent = "X";
+        successMessage.appendChild(successClose);
+        document.getElementById('root').appendChild(successMessage);
+      })
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const verificationData = {
-      code: formData.verificationCode,
-      // Add the other backend fields for verification
-    };
-
-    fetch('https://knesgczxc3ylg7qs4kfi4pdxvy0grqbc.lambda-url.us-east-1.on.aws/verify-email', {
+    if (formData.username === ''){
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'error'
+      errorMessage.textContent = "Username is blank";
+      const errorClose = document.createElement('a')
+      errorClose.className = 'error-btn'
+      errorClose.addEventListener("click", function() {
+        const errorElements = document.getElementsByClassName('error');
+        for (let i = 0; i < errorElements.length; i++) {
+            errorElements[i].style.display = 'none';
+        }
+    });
+      errorClose.textContent = "X";
+      errorMessage.appendChild(errorClose);
+      document.getElementById('root').appendChild(errorMessage);
+    } else{
+      console.log(formData)
+    fetch('https://knesgczxc3ylg7qs4kfi4pdxvy0grqbc.lambda-url.us-east-1.on.aws', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(verificationData),
+      body: JSON.stringify(formData),
     })
     .then((response) => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+      if (response.status === 200) {
+        window.location.href = '/signin'
+        return response.json()
+      }else{
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error'
+        errorMessage.textContent = "Invalid Code, please try again.";
+        const errorClose = document.createElement('a')
+        errorClose.className = 'error-btn'
+        errorClose.addEventListener("click", function() {
+          const errorElements = document.getElementsByClassName('error');
+          for (let i = 0; i < errorElements.length; i++) {
+              errorElements[i].style.display = 'none';
+          }
+      });
+      errorClose.textContent = "X";
+      errorMessage.appendChild(errorClose);
+      document.getElementById('root').appendChild(errorMessage);
       }
-      return response.json();  
     })
-    .then(data => {
-      if (data.status === 200 || data.status === 201) {
-        console.log('Email verification successful:', data);
-        // Handle the success scenario (e.g., display a message, redirect user)
-      } else {
-        console.error('Error during email verification:', data);
-        // Display an error message to the user
-      }
-    })
-    .catch((error) => {
-      console.error('Error during email verification:', error);
-      // Display a user-friendly error message
-    });
+  }
   };
 
   return (
     <div className="EmailVerification">
       <h1>Email Verification</h1>
       <p>Please enter the verification code sent to your email.</p>
+      <button className="resend-btn" type="button" onClick={resendCode}>Resend code</button>
       <form onSubmit={handleSubmit}>
+      <div className='row'>
+          <input
+            type="text"
+            placeholder="Username"
+            required={true}
+            value={formData.username}
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
+          />
+        </div>
         <div className='row'>
           <input
             type="text"
-            placeholder="Verification Code"
+            placeholder="XXXXXX"
+            pattern="\d{6}"
+            title="Please enter a 6-digit code"
             required={true}
-            value={formData.verificationCode}
+            value={formData.verification_code}
             onChange={(e) =>
-              setFormData({ ...formData, verificationCode: e.target.value })
+              setFormData({ ...formData, verification_code: e.target.value })
             }
           />
         </div>
