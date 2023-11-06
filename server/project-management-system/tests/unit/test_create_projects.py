@@ -115,6 +115,6 @@ def dynamodb_table():
 
 def test_create_projects(apigw_event, dynamodb_table):
     ret = create_projects.lambda_handler(apigw_event, context="")
-
+    print(ret.get("response"))
     assert ret["statusCode"] == 200
 

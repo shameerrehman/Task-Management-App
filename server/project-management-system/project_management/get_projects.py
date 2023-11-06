@@ -17,7 +17,7 @@ def custom_serializer(obj):
 def lambda_handler(event, context):
     dynamodb = boto3.resource('dynamodb')
     projects_table = dynamodb.Table('projects_DB')
-    user_id = event.get('body')['userID']
+    user_id = event.get('queryStringParameters')['userID']
 
     try:
         response = projects_table.query(

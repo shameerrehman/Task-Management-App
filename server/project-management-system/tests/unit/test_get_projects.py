@@ -9,9 +9,8 @@ from project_management import get_projects
 @pytest.fixture()
 def apigw_event():
     """ Generates API GW Event"""
-    item = {"userID": "testID"}
     return {
-        "body": item,
+        "body": {"foo": "bar"},
         "resource": "/{proxy+}",
         "requestContext": {
             "resourceId": "123456",
@@ -35,7 +34,7 @@ def apigw_event():
             },
             "stage": "prod",
         },
-        "queryStringParameters": {"foo": "bar"},
+        "queryStringParameters": {"userID": "testID"},
         "headers": {
             "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
             "Accept-Language": "en-US,en;q=0.8",
@@ -125,7 +124,7 @@ def dynamodb_table():
 def test_get_projects(apigw_event, dynamodb_table):
     ret = get_projects.lambda_handler(apigw_event, context="")
     ret_body = json.loads(ret["body"])
-
+    print(ret)
     returned_item = ret_body['data'][0]
     print(returned_item)
     assert ret["statusCode"] == 200
