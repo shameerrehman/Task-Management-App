@@ -1,3 +1,5 @@
+import json
+
 import pytest
 import boto3
 from moto import mock_dynamodb
@@ -16,8 +18,9 @@ def apigw_event():
         "startTime": date.today().isoformat(),
         "endTime": "2025-05-15"
     }
+
     return {
-        "body": item,
+        "body": json.dumps(item),
         "resource": "/{proxy+}",
         "requestContext": {
             "resourceId": "123456",
@@ -114,6 +117,7 @@ def dynamodb_table():
 
 
 def test_create_projects(apigw_event, dynamodb_table):
+    print(apigw_event['body'])
     ret = create_projects.lambda_handler(apigw_event, context="")
 
     assert ret["statusCode"] == 200

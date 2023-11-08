@@ -9,12 +9,10 @@ def create_uuid_util():
 
 def lambda_handler(event, context):
     try:
-        event_body = json.loads(event['body'])
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table("projects_DB")
 
-        project_information = json.loads(event.get('body'))
-
+        project_information = json.loads(event['body'])
         required_fields = ["userID", "projectName", "description"]
 
         for field in required_fields:
