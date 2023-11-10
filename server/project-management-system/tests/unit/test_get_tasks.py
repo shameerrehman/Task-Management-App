@@ -1,26 +1,22 @@
 import json
-
-import pytest
 import boto3
+import pytest
+import uuid
+from datetime import datetime
 from moto import mock_dynamodb
-from project_management import create_projects
-from datetime import date
+from project_management import get_tasks
+
+
+def create_uuid_util():
+    return str(uuid.uuid4())
 
 
 @pytest.fixture()
 def apigw_event():
-    item = {
-        "userID": "testID",
-        "projectName": "Test Project",
-        "projectLead": "lead user",
-        "description": "This is a test project's description",
-        "teamMembers": ["Shameer", "Joseph", "Saiharan", "Ashreet", "Atheesh"],
-        "startTime": date.today().isoformat(),
-        "endTime": "2025-05-15"
-    }
+    """ Generates API GW Event"""
 
     return {
-        "body": json.dumps(item),
+        "body": {"foo": "bar"},
         "resource": "/{proxy+}",
         "requestContext": {
             "resourceId": "123456",
@@ -44,7 +40,7 @@ def apigw_event():
             },
             "stage": "prod",
         },
-        "queryStringParameters": {"foo": "bar"},
+        "queryStringParameters": {"projectID": "testProjectID"},
         "headers": {
             "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
             "Accept-Language": "en-US,en;q=0.8",
@@ -76,6 +72,31 @@ def apigw_event():
 def dynamodb_table():
     with mock_dynamodb():
         dynamo = boto3.client('dynamodb', region_name='us-east-1')
+
+        dynamo.create_table(
+            TableName='tasks_DB',
+            KeySchema=[{'AttributeName': 'taskID', 'KeyType': 'HASH'},
+                       {'AttributeName': 'projectID', 'KeyType': 'RANGE'}],
+            AttributeDefinitions=[{'AttributeName': 'taskID', 'AttributeType': 'S'},
+                                  {'AttributeName': 'projectID', 'AttributeType': 'S'}],
+            ProvisionedThroughput={'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5},
+            GlobalSecondaryIndexes=[
+                {
+                    'IndexName': 'ProjectIDIndex',
+                    'KeySchema': [
+                        {'AttributeName': 'projectID', 'KeyType': 'HASH'},
+                        {'AttributeName': 'taskID', 'KeyType': 'RANGE'}
+                    ],
+                    'Projection': {
+                        'ProjectionType': 'ALL'
+                    },
+                    'ProvisionedThroughput': {
+                        'ReadCapacityUnits': 5,
+                        'WriteCapacityUnits': 5
+                    }
+                }
+            ]
+        )
 
         dynamo.create_table(
             TableName='projects_DB',
@@ -113,12 +134,52 @@ def dynamodb_table():
             }
         )
 
+        dynamo.put_item(
+            TableName='tasks_DB',
+            Item={
+                'taskID': {'S': create_uuid_util()},
+                'projectID': {'S': 'testProjectID'},
+                'taskName': {'S': 'SampleTask'},
+                'taskDescription': {'S': 'A sample task for testing'},
+                'taskDueDate': {'S': datetime.now().isoformat()},
+                'status': {'S': 'to-do'},
+                'taskTags': {'L': [
+                    {'S': 'testTag'}, {'S': 'Tag1'}
+                ]}
+            }
+        )
+
+        dynamo.put_item(
+            TableName='tasks_DB',
+            Item={
+                'taskID': {'S': create_uuid_util()},
+                'projectID': {'S': 'testProjectID'},
+                'taskName': {'S': 'SampleTask2'},
+                'taskDescription': {'S': 'A sample task for testing'},
+                'taskDueDate': {'S': datetime.now().isoformat()},
+                'status': {'S': 'to-do'},
+                'taskTags': {'L': [
+                    {'S': 'testTag'}, {'S': 'Tag2'}
+                ]}
+            }
+        )
+
         yield dynamo
 
 
-def test_create_projects(apigw_event, dynamodb_table):
-    print(apigw_event['body'])
-    ret = create_projects.lambda_handler(apigw_event, context="")
-    print(ret.get("response"))
+def test_get_tasks(apigw_event, dynamodb_table):
+    task_name_list = list()
+    ret = get_tasks.lambda_handler(apigw_event, context="")
+    print(ret)
+    ret_body = json.loads(ret["body"])
+
     assert ret["statusCode"] == 200
+
+    task_name_list.append(ret_body['data'][0]['taskName'])
+    task_name_list.append(ret_body['data'][1]['taskName'])
+    assert 'SampleTask' in task_name_list
+    assert 'SampleTask2' in task_name_list
+
+
+
 

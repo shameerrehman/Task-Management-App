@@ -1,26 +1,16 @@
-import json
-
 import pytest
+import json
 import boto3
+import uuid
 from moto import mock_dynamodb
-from project_management import create_projects
-from datetime import date
+from project_management import get_projects
 
 
 @pytest.fixture()
 def apigw_event():
-    item = {
-        "userID": "testID",
-        "projectName": "Test Project",
-        "projectLead": "lead user",
-        "description": "This is a test project's description",
-        "teamMembers": ["Shameer", "Joseph", "Saiharan", "Ashreet", "Atheesh"],
-        "startTime": date.today().isoformat(),
-        "endTime": "2025-05-15"
-    }
-
+    """ Generates API GW Event"""
     return {
-        "body": json.dumps(item),
+        "body": {"foo": "bar"},
         "resource": "/{proxy+}",
         "requestContext": {
             "resourceId": "123456",
@@ -44,7 +34,7 @@ def apigw_event():
             },
             "stage": "prod",
         },
-        "queryStringParameters": {"foo": "bar"},
+        "queryStringParameters": {"userID": "testID"},
         "headers": {
             "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net (CloudFront)",
             "Accept-Language": "en-US,en;q=0.8",
@@ -107,18 +97,41 @@ def dynamodb_table():
                 'projectID': {'S': 'testProjectID'},
                 'userID': {'S': 'testID'},
                 'projectName': {'S': 'testProject'},
-                'projectDescription': {'S': 'A mocked project for testing'},
-                'sections': {'SS': ['to-do', 'in-progress', 'done']},
-                'defaultView': {'S': 'Board'}
+                'projectLead': {'S': 'lead user'},
+                'description': {'S': 'A mocked project for testing'},
+                'teamMembers': {'SS': ['Joseph', 'Atheesh', 'Ashreet', 'Shameer', 'Saiharan', 'Farouk']},
+                'startTime': {'S': '2023-10-29'},
+                'endTime': {'S': '2025-10-29'},
+            }
+        )
+        dynamo.put_item(
+            TableName='projects_DB',
+            Item={
+                'projectID': {'S': 'testProjectID2'},
+                'userID': {'S': 'testID'},
+                'projectName': {'S': 'testProject2'},
+                'projectLead': {'S': 'lead user'},
+                'description': {'S': 'A mocked project for testing'},
+                'teamMembers': {'SS': ['Joseph', 'Atheesh', 'Ashreet', 'Shameer', 'Saiharan', 'Farouk']},
+                'startTime': {'S': '2023-11-29'},
+                'endTime': {'S': '2025-10-29'},
             }
         )
 
         yield dynamo
 
 
-def test_create_projects(apigw_event, dynamodb_table):
-    print(apigw_event['body'])
-    ret = create_projects.lambda_handler(apigw_event, context="")
-    print(ret.get("response"))
+def test_get_projects(apigw_event, dynamodb_table):
+    ret = get_projects.lambda_handler(apigw_event, context="")
+    ret_body = json.loads(ret["body"])
+    print(ret)
+    returned_item = ret_body['data'][0]
+    print(returned_item)
     assert ret["statusCode"] == 200
+    assert returned_item['userID'] == 'testID'
+    assert returned_item['projectName'] == 'testProject'
 
+    returned_item2 = ret_body['data'][1]
+    print(returned_item2)
+    assert returned_item2['userID'] == 'testID'
+    assert returned_item2['projectName'] == 'testProject2'
