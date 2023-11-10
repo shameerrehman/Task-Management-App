@@ -21,7 +21,9 @@ def lambda_handler(event, context):
                     'statusCode': 400,
                     'body': f'Missing required field: {field}'
                 }
-            
+
+        project_key = generate_project_key(project_information['projectName'])
+
         item = {
             'projectID': create_uuid_util(),
             'userID': project_information['userID'], 
@@ -46,3 +48,24 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': 'An error occurred: ' + str(e) + ' data was' + str(project_information)
         }
+
+
+def generate_project_key(project_name):
+    if len(project_name.split()) > 1:
+        return acronymize(project_name)
+    else:
+        return disemvowel()
+
+
+def disemvowel(project_name):
+    vowels = 'aeiouAEIOU'
+    return ''.join([letter for letter in project_name if letter not in vowels]).upper()
+
+
+def acronymize(project_name):
+    words = project_name.split()
+    if len(words) == 1:
+        return words[0][:4].upper()
+    else:  # Multi-word project
+        # Take the first letter of each word and concatenate
+        return ''.join(word[0] for word in words).upper()
