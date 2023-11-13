@@ -11,13 +11,9 @@ function NavBar() {
             return
         }
         const formData = { userID: JSON.parse(localStorage.getItem("authData")).username }
-        fetch('https://rsf6bjt4de6goirsyfvxfs2zdy0vquva.lambda-url.us-east-1.on.aws/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        }).then(response => {
+        fetch('https://rsf6bjt4de6goirsyfvxfs2zdy0vquva.lambda-url.us-east-1.on.aws?' + new URLSearchParams({
+            userID: JSON.parse(localStorage.getItem("authData")).username
+        })).then(response => {
             return response.json()
         }).then(data => {
             let colorDict = {}
