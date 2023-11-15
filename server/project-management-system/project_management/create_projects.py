@@ -33,6 +33,8 @@ def lambda_handler(event, context):
             'teamMembers': project_information['teamMembers'],
             'startTime': project_information['startTime'],
             'endTime': project_information['endTime'],
+            'projectKey': project_key,
+            'taskSequence': 1,
         }
         print(item)
         response = table.put_item(Item=item)
@@ -54,7 +56,7 @@ def generate_project_key(project_name):
     if len(project_name.split()) > 1:
         return acronymize(project_name)
     else:
-        return disemvowel()
+        return disemvowel(project_name)
 
 
 def disemvowel(project_name):
@@ -66,6 +68,5 @@ def acronymize(project_name):
     words = project_name.split()
     if len(words) == 1:
         return words[0][:4].upper()
-    else:  # Multi-word project
-        # Take the first letter of each word and concatenate
+    else:
         return ''.join(word[0] for word in words).upper()
