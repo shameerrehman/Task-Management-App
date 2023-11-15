@@ -1,11 +1,7 @@
-import json
 import boto3
-from boto3.dynamodb.conditions import Key
+import json
 from botocore.exceptions import ClientError
 from decimal import Decimal
-
-
-dynamodb = boto3.resource('dynamodb')
 
 
 def custom_serializer(obj):
@@ -18,8 +14,10 @@ def custom_serializer(obj):
     raise TypeError
 
 
-def get_project_tasks(project_id):
+def lambda_handler(event, context):
+    dynamodb = boto3.resource('dynamodb')
     tasks_table = dynamodb.Table('tasks_DB')
+    project_id = event.get('queryStringParameters')['projectID']
 
     try:
         response = tasks_table.query(
@@ -33,12 +31,10 @@ def get_project_tasks(project_id):
 
         if 'Items' in response:
             items = response['Items']
-            print("GetItem succeeded:")
+            print("Get Tasks succeeded")
             return {
                 'statusCode': 200,
-                'body': json.dumps({
-                    'data': items
-                }, default=custom_serializer)  # Use the custom serialization function here
+                'body': json.dumps({'data': items}, default=custom_serializer)
             }
         else:
             print("No item found with the provided key.")
@@ -46,7 +42,6 @@ def get_project_tasks(project_id):
                 'statusCode': 404,
                 'body': json.dumps('Item not found')
             }
-
     except ClientError as e:
         print(f"ClientError: {e}")
         return {
@@ -59,16 +54,3 @@ def get_project_tasks(project_id):
             'statusCode': 500,
             'body': json.dumps('An unknown error occurred')
         }
-
-
-def lambda_handler(event, context):
-    user_id = event.get('body')["userID"]
-
-    print(f"Retrieving projects for userID: {user_id}")
-    # user_projects = get_projects(user_id)
-    print("Retrieving tasks for projects")
-    projects_tasks = get_project_tasks(user_projects)
-
-    user_projects_data = json.loads(user_projects["body"])["data"]
-    project_tasks_data = json.loads(projects_tasks["body"])["data"]
-
