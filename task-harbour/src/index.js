@@ -7,6 +7,7 @@ import Signin from './components/signin/signin';
 import ProjectCreation from './components/projectCreation/projectCreation';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword'; 
 import ConfirmCode from './components/confirmCode/confirmCode';
+import SelectProject from './components/selectProject/select-project';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
@@ -22,6 +23,7 @@ root.render(
           <Route path="/projectCreation" element={<ProjectCreation />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/confirm-code" element={<ConfirmCode />} />
+          <Route path="/select-project" element={<SelectProject />} />
         </Routes>
       </div>
     </Router>
