@@ -2,6 +2,7 @@ import './projectCreation.css';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import UserSearchDropdown from '../UserSearchDropdown/user-search';
 
 
 function ProjectCreation() {
@@ -25,6 +26,17 @@ function ProjectCreation() {
     const [date, setDate] = useState(new Date());
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
+
+    const [projectLeadSelected, setProjectLead] = useState(null);
+
+    const handleProjectLeadChange = selectedOption => {
+        setProjectLead(selectedOption);
+        // Extract the username from the selectedOption
+        const selectedUsername = selectedOption ? selectedOption.value : '';
+
+        // Update formData with the selected username
+        setFormData({ ...formData, projectLead: selectedUsername });
+    };
 
     function projectLeader () {
         try {
@@ -106,9 +118,9 @@ function ProjectCreation() {
             ) : (
                 <form onSubmit={handleSubmit}>
                     <div className='row'>
+                        <label>Project Name: </label>
                         <input
                             type="text"
-                            placeholder="Project Name"
                             required={true}
                             value={formData.projectName}
                             onChange={(e) =>
@@ -151,9 +163,9 @@ function ProjectCreation() {
                     </div> */}
 
                     <div className='row'>
-                        <input
+                        <label>Project Description:</label>
+                        <textarea
                             type="text"
-                            placeholder="Description"
                             required={true}
                             value={formData.description}
                             onChange={(e) =>
@@ -161,7 +173,7 @@ function ProjectCreation() {
                             }
                         />
                     </div>
-
+                    
                     {/* <div className='row'>
                         <input
                             type="text" // INSERT FILES
@@ -174,7 +186,11 @@ function ProjectCreation() {
                         />
                     </div> */}
                     <div className='row'>
-                        <input
+                        <label>Project Lead: </label>
+                        <UserSearchDropdown 
+                            onUserSelect={handleProjectLeadChange}
+                        />
+                        {/* <input
                             type="text" // DEFAULT IS CREATOR
                             placeholder="Project Lead"
                             required={true}
@@ -182,13 +198,13 @@ function ProjectCreation() {
                             onChange={(e) =>
                                 setFormData({ ...formData, projectLead: e.target.value })
                             }
-                        />
+                        /> */}
                     </div>
 
                     <div className='row'>
                         <div>
+                            <label>Start Date: </label>
                             <DatePicker
-                                placeholderText="Start Date"
                                 required={true}
                                 selectsStart
                                 selected={startDate}
@@ -200,8 +216,8 @@ function ProjectCreation() {
 
                     <div className='row'>
                         <div>
+                            <label>End Date: </label>
                             <DatePicker
-                                placeholderText="End Date"
                                 required={true}
                                 selectsEnd
                                 selected={endDate}
@@ -221,5 +237,4 @@ function ProjectCreation() {
         </div>
     );
 }
-
 export default ProjectCreation;
