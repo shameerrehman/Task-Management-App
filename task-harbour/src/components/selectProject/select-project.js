@@ -30,7 +30,6 @@ function SelectProject() {
                 colorDict[project.projectID] = color
             })
             data['color'] = colorDict
-            // setProjectsList(data)
             setCards(cardArr)
         })
     }

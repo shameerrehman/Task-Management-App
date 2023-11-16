@@ -23,6 +23,14 @@ h4{
     color: #F3f3f3f3;
 }
 
+h5{
+    position: relative;
+    font-size: 20px;
+    line-height: 10%;
+    margin-bottom: 10px;
+    color: #00243C;
+}
+
 .cards{
     position: relative;
     top:10vh;
