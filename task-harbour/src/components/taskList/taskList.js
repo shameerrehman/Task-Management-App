@@ -222,9 +222,21 @@ function ProjectCreation() {
             flex: 1,
             renderCell: (params) => {
                 if(params.value != "null"){
+                    try {
+                        var labelList = []
+                        JSON.parse(params.value).forEach(tag=>{
+                            labelList.push(<label className={'taskLabel'}>{tag}</label>)
+                            labelList.push(<label className={'spacingLabel'}></label>)
+                        })
+                        return labelList
+                        
+                    } catch (error) {
+                        return <label>{params.value}</label>                        
+                    }
+
                     return <label>{params.value}</label>
                 }
-                return <label>-</label>
+                return <label className={'blankLabel'}>-</label>
             }
         },
 
