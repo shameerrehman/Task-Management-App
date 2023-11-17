@@ -27,7 +27,7 @@ root.render(
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/confirm-code" element={<ConfirmCode />} />
           <Route path="/verify-email" element={<EmailVerification />} />
-          <Route path="/taskList/:id" element={<TaskList />} />
+          <Route path="/projects/:id" element={<TaskList />} />
         </Routes>
       </div>
     </Router>
