@@ -1,0 +1,88 @@
+.taskList{
+    background-color: #FAFAFA;
+    border-radius: 10px;
+    width: 88vw;
+    z-index: 0;
+    position: relative;
+    height: 90vh;
+}
+.taskList .css-ptkaw2-MuiDataGrid-root{
+    border-style: none;
+
+}
+
+.taskLink{
+    background-color: aqua;
+    border-color : aqua;
+    /* font-family: ; */
+    font-weight: bold;
+    border-radius: 10px;
+
+}
+
+.criticalLabel{
+    background-color: red;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
+
+.majorLabel{
+    background-color: orange;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
+
+
+.minorLabel{
+    background-color: yellow;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
+
+
+.statusLabel{
+    background-color: chartreuse;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
+
+.pointsLabel{
+    /* background-color: chartreuse; */
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
+
+.blankLabel{
+    /* background-color: chartreuse; */
+    align-items: center;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
+
+.taskLabel{
+    background-color: white;
+    border-style: solid;
+    border-width: 0.001vw;
+    border-color: black;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
+
+.spacingLabel{
+    /* background-color: white; */
+    /* border-style: solid; */
+    /* border-width: 0.001vw; */
+    /* border-color: black; */
+    align-items: center;
+    font-weight: bold;
+    border-radius: 1px;
+    padding: 0.5vh;
+}
