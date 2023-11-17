@@ -1,66 +1,195 @@
-a, a:hover, a:visited, a:active {
-    color: inherit;
-    text-decoration: none;
-   }
+/* navbar.css */
 
-.div-icon {
-    width: 35px;
-    height: 5px;
-    background-color: black;
-    margin: 6px 0;
-}
-
-.dropdown{
-    position: absolute;
-    top:0;
-    left:0;
+.navbar {
+    background-color: #F4F7FA;
+    width: 250px;
     height: 100%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    font-family: 'Arial', sans-serif;
 }
 
-/* .dropdown:hover */
-.dropdown:hover .dropdown-content {
-    display: block;
-    position: absolute;
-    top:0;
-    left:0;
-    height: 95%;
-    background-color: #FAFAFA;
+.navbar-header {
+    padding: 20px;
+    background-color: #FFFFFF;
+    text-align: center;
+    border-bottom: 1px solid #E5E5E5;
 }
 
-.dropdown-content {
-    display: none;
-    padding: 10px;
-    background-color: #00243C;
-    color: black;
+.navbar-header h1 {
+    color: #00243C;
+    font-size: 24px;
     font-weight: bold;
-    font-size: 20px;
-    list-style-type: none;
-    width: 200px;
-    position:relative
+    margin: 0;
+}
+
+.navbar.collapsed {
+    width: 80px;
+}
+
+.navbar-header button {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.navbar-header button span,
+.navbar-header button span::before,
+.navbar-header button span::after {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+.navbar-header button span {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.navbar-header button span::before {
+    content: '';
+    top: -10px;
+}
+
+.navbar-header button span::after {
+    content: '';
+    top: 10px;
+}
+
+.navbar-content.hide, .projects-dropdown.hide {
+    display: none;
+}
+
+.navbar-content {
+    position: relative;
+    padding: 20px;
 }
 
 .newProject {
-    padding: 1.5vh 3vw;
-    /* margin-top: 10px; */
     background-color: #00243C;
-    color: white;
     font-weight: bold;
-    font-size: 20px;
-    border-radius: 15px;
+    color: white !important;
+    padding: 10px 20px;
+    margin: 10px 0 20px 0;
+    text-align: center;
+    border-radius: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    display: block;
 }
 
-.projectlink{
-    font-weight: normal;
-
+.newProject:hover {
+    background-color: #0f2d57;
 }
 
-.nameAndDot{
-    display: inline-block;
+.projects-dropdown {
+
+    background-color: #E5E5E5; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px; 
+    padding: 8px 0; 
+    z-index: 2;
+    width: calc(100% - 20px);
+    margin: 5px 10px; 
+    font-size: 10px; 
 }
 
-.dot {
-    height: 15px;
-    width: 15px;
+.projects-dropdown.show {
+    display: block;
+}
+
+.project-link {
+    display: flex;
+    align-items: center;
+    padding: 1px 20px;
+    margin: 0; 
+}
+
+.project-dot {
+    height: 12px;
+    width: 12px;
     border-radius: 50%;
     display: inline-block;
-  }
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.project-dot.project-1 { background-color: #8C9EFF; }
+.project-dot.project-2 { background-color: #FF8A80; }
+
+
+.project-link a {
+    font-size: 12px; 
+    color: black;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+.project-link a.active {
+    background-color: #848282;
+    color: #0056b3;
+}
+
+.project-link a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown-link {
+    cursor: pointer;
+    padding: 10px 0;
+    text-decoration: none;
+    font-size: 18px;
+    color: #333333;
+    display: block;
+    transition: 0.3s;
+}
+
+.dropdown-link:hover {
+    background-color: #E5E5E5;
+}
+
+.navbar-content a {
+    padding: 10px 0;
+    text-decoration: none;
+    font-size: 18px;
+    color: #333333;
+    display: block;
+    transition: 0.3s;
+}
+
+.navbar-content a:hover {
+    background-color: #E5E5E5;
+}
+
+.category-title {
+    padding-top: 20px;
+    color: #00243C;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.project-dot {
+    height: 8px; 
+    width: 8px; 
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+
