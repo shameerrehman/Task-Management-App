@@ -9,6 +9,8 @@ import ProjectCreation from './components/projectCreation/projectCreation';
 import ForgotPassword from './components/ForgotPassword/ForgotPassword'; 
 import ConfirmCode from './components/confirmCode/confirmCode';
 import EmailVerification from './components/EmailVerification/EmailVerification';
+import TaskList from './components/taskList/taskList';
+import SelectProject from './components/selectProject/select-project';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
@@ -26,6 +28,8 @@ root.render(
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/confirm-code" element={<ConfirmCode />} />
           <Route path="/verify-email" element={<EmailVerification />} />
+          <Route path="/projects/:id" element={<TaskList />} />
+          <Route path="/select-project" element={<SelectProject />} />
         </Routes>
       </div>
     </Router>
