@@ -1,0 +1,50 @@
+h2 {
+    color: white;
+    text-align: center;
+    background-color: #00243C;
+    padding: 10px;
+    border-radius: 30px;
+    margin-left: 5px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    color: white;
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #00243C;
+    padding: 30px;
+    border-radius: 30px;
+  }
+
+
+.modal [disabled] {
+    color: white;
+}
+
+button {
+    color: #00243C;
+    background-color: #FAFAFA;
+    border-radius: 20px;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: #00243C;
+    color: white;
+}
+
+input {
+    text-align: center;
+}
+
+.close {
+    font-size: 25px;
+    color: white;
+}
