@@ -39,8 +39,8 @@ function ProjectCreation() {
 
     function getProjectId() {
         try {
-            // return window.location.pathname.split('/')[2]
-            return "9e0cad6b-4645-45a2-849d-790f449a57c7" // temp
+            return window.location.pathname.split('/')[2]
+            // return "9e0cad6b-4645-45a2-849d-790f449a57c7" // temp
         } catch (error) {
             // Handle errors or display a message to the user
             console.error('Error getting project ID:', error);
