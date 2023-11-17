@@ -40,7 +40,7 @@ function TaskModal() {
           status:'',
           taskTags:'',
           creatorUserID:'',
-          assigneeUserID: assigneeUserID,
+          assigneeUserID: assigneeUserID.value,
           priority,
           storyPoints,
         }
@@ -55,7 +55,7 @@ function TaskModal() {
 
     .then(response => response.json())
     .then(data => {
-      console.log('Success: Task created successfully!');
+      console.log('Task Created');
       setIsSubmitted(true);
       //window.location.href = '' <-- page redirection? I need to add the link
 
