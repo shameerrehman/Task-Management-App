@@ -21,42 +21,28 @@ function TaskModal() {
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState(); 
 
-    // const handleAssigneeChange = selectedOption => {
-    //     setAssigneeUserID(selectedOption);
-    //     // Extract the username from the selectedOption
-    //     const selectedUsername = selectedOption ? selectedOption.value : '';
-
-    //     // Update formData with the selected username
-    //     setFormData({ ...formData, assigneeUserID: selectedUsername });
-    // };
     const handleAssigneeChange = selectedOption => {
       setAssigneeUserID(selectedOption);
     
       // Extract the username from the selectedOption
       const selectedUsername = selectedOption ? selectedOption.value : '';
-    
-      // Update formData with the selected username
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        assigneeUserID: selectedUsername
-      }));
+  
     };
     
-
     const handleSubmit = (e) => {
       e.preventDefault(); //
 
-        const newTask = {
-            projectID:'1',
-            taskName,
-            taskDescription,
-            taskDueDate,
-            status,
-            taskTags,
-            creatorUserID,
-            assigneeUserID: assigneeUserID,
-            priority,
-            storyPoints,
+        const newTask= {
+          projectID:'1',
+          taskName:'',
+          taskDescription:'',
+          taskDueDate,
+          status:'',
+          taskTags:'',
+          creatorUserID:'',
+          assigneeUserID: assigneeUserID,
+          priority,
+          storyPoints,
         }
 
     fetch('https://5k36hyuwslzt52zrpha5wcvfbe0grnmw.lambda-url.us-east-1.on.aws/', {
@@ -71,7 +57,7 @@ function TaskModal() {
     .then(data => {
       console.log('Success: Task created successfully!');
       setIsSubmitted(true);
-      //window.location.href = '' <-- page redirection? i need to add the link
+      //window.location.href = '' <-- page redirection? I need to add the link
 
     }) 
 
