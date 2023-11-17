@@ -5,6 +5,16 @@ import { useState, useEffect } from "react";
 function NavBar() {
     const location = useLocation();
     const [projectsList, setProjectsList] = useState([]);
+    const [isCollapsed, setIsCollapsed] = useState(true);
+    const [showProjectsDropdown, setShowProjectsDropdown] = useState(false);
+
+    const toggleNavbar = () => {
+        setIsCollapsed(!isCollapsed);
+    };
+
+    const toggleProjectsDropdown = () => {
+        setShowProjectsDropdown(prevState => !prevState);
+    };
 
     useEffect(() => {
         const authData = JSON.parse(localStorage.getItem("authData"));
@@ -14,22 +24,22 @@ function NavBar() {
     }, [location]);
 
     function fetchProjects(username) {
-        const formData = { userID: username };
-        fetch('https://rsf6bjt4de6goirsyfvxfs2zdy0vquva.lambda-url.us-east-1.on.aws/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        })
-        .then(response => response.json())
+        const formData = { userID: JSON.parse(localStorage.getItem("authData")).username };
+        fetch('https://rsf6bjt4de6goirsyfvxfs2zdy0vquva.lambda-url.us-east-1.on.aws?' + new URLSearchParams({
+            userID: JSON.parse(localStorage.getItem("authData")).username
+        })).then(response => response.json())
         .then(data => {
             let colorDict = {};
             data['data'].forEach(project => {
-                var color = '#' + Math.floor(Math.random()*16777215).toString(16);
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (var i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
                 colorDict[project.projectID] = color;
             });
             data['color'] = colorDict;
+            console.log(data);
             setProjectsList(data['data']);
         });
     }
@@ -48,11 +58,13 @@ function NavBar() {
     }
 
     return (
-        <div className="navbar">
+        <div className={`navbar ${isCollapsed ? 'collapsed' : ''}`}>
             <div className="navbar-header">
-                <h1>Task Harbor</h1>
+                <button onClick={toggleNavbar}><span></span></button>
             </div>
-            <div className="navbar-content">
+            
+            <div className={`navbar-content ${isCollapsed ? 'hide' : ''}`}>
+                <h1>Task Harbor</h1>
                 {!isLoggedIn() && (
                     <>
                         <NavLink to="/">Home</NavLink>
@@ -64,19 +76,23 @@ function NavBar() {
                     <>
                         <NavLink to="/projectCreation" className="newProject">+ New Project</NavLink>
                         <NavLink to="/">Home</NavLink>
-                        <NavLink to="/select-project">Projects</NavLink>
-                        <div className="projects-list">
-                            {projectsList.map(project => {
-                                let urlLink = "/projects/" + project.projectID;
-                                var color = '#' + Math.floor(Math.random()*16777215).toString(16); 
-                                return (
-                                    <NavLink key={project.projectID} to={urlLink}>
-                                        <span className="dot" style={{ backgroundColor: color }}></span>
-                                        {project.projectName}
-                                    </NavLink>
-                                );
-                            })}
-                        </div>
+                        <div  className="dropdown-link" onClick={toggleProjectsDropdown}>Projects</div>
+                        {showProjectsDropdown && (
+                            <div className={`projects-dropdown ${showProjectsDropdown ? 'show' : ''}`}>
+                                {projectsList.map(project => {
+                                    let urlLink = "/projects/" + project.projectID;
+                                    let color = (projectsList && projectsList[0] && projectsList[0].color && projectsList[0].color[project.projectID]) || '#' + Math.floor(Math.random() * 16777215).toString(16);
+                                    return (
+                                        <div key={project.projectID} className="project-link">
+                                            <NavLink to={urlLink}>
+                                                <span className="project-dot" style={{ backgroundColor: color }}></span>
+                                                {project.projectName}
+                                            </NavLink>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}                                        
                         <NavLink to="/logout" onClick={tempLogout}>Logout</NavLink>
                     </>
                 )}
