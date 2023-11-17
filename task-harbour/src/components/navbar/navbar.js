@@ -84,7 +84,7 @@ function NavBar() {
                                     let color = (projectsList && projectsList[0] && projectsList[0].color && projectsList[0].color[project.projectID]) || '#' + Math.floor(Math.random() * 16777215).toString(16);
                                     return (
                                         <div key={project.projectID} className="project-link">
-                                            <NavLink to={urlLink}>
+                                            <NavLink to={urlLink} reloadDocument={true}>
                                                 <span className="project-dot" style={{ backgroundColor: color }}></span>
                                                 {project.projectName}
                                             </NavLink>
