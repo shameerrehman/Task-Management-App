@@ -36,14 +36,19 @@ body {
   }
   
   input,
-  select,
-  button {
+  select
+  {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
     box-sizing: border-box;
   }
-  
+  .createTaskButton{
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
   button {
     background-color: #00243C;
     color: #fff;
