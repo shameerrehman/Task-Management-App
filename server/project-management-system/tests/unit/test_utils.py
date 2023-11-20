@@ -16,6 +16,11 @@ def test_generate_project_key_multiple_words(mocker):
     create_projects.acronymize.assert_called_once()
 
 
+def test_generate_project_key_longer_than_four_characters():
+    project_key = create_projects.generate_project_key("The Deep End Is Further Than You Think")
+    assert project_key == "TDEI"
+
+
 def test_disemvowel():
     project_key = create_projects.disemvowel("Spediel")
     assert project_key == "SPDL"

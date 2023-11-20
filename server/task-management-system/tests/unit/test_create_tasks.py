@@ -99,6 +99,45 @@ def tasks_db_table():
                 }
             ]
         )
+
+        dynamo.create_table(
+            TableName='projects_DB',
+            KeySchema=[{'AttributeName': 'projectID', 'KeyType': 'HASH'},
+                       {'AttributeName': 'userID', 'KeyType': 'RANGE'}],
+            AttributeDefinitions=[{'AttributeName': 'projectID', 'AttributeType': 'S'},
+                                  {'AttributeName': 'userID', 'AttributeType': 'S'}],
+            ProvisionedThroughput={'ReadCapacityUnits': 5, 'WriteCapacityUnits': 5},
+            GlobalSecondaryIndexes=[
+                {
+                    'IndexName': 'UserIDIndex',
+                    'KeySchema': [
+                        {'AttributeName': 'userID', 'KeyType': 'HASH'},
+                        {'AttributeName': 'projectID', 'KeyType': 'RANGE'}
+                    ],
+                    'Projection': {
+                        'ProjectionType': 'ALL'
+                    },
+                    'ProvisionedThroughput': {
+                        'ReadCapacityUnits': 5,
+                        'WriteCapacityUnits': 5
+                    }
+                }
+            ]
+        )
+        dynamo.put_item(
+            TableName='projects_DB',
+            Item={
+                'projectID': {'S': 'testProjectID'},
+                'userID': {'S': 'testID'},
+                'projectName': {'S': 'testProject'},
+                'projectDescription': {'S': 'A mocked project for testing'},
+                'sections': {'SS': ['to-do', 'in-progress', 'done']},
+                'defaultView': {'S': 'Board'},
+                'projectKey': {'S': 'TSTPRJCT'},
+                'taskSequence': {'N': '2'}
+            }
+        )
+
         yield dynamo
 
 

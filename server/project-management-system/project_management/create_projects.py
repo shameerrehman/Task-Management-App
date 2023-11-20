@@ -53,10 +53,12 @@ def lambda_handler(event, context):
 
 
 def generate_project_key(project_name):
+    project_key = ""
     if len(project_name.split()) > 1:
-        return acronymize(project_name)
+        project_key = acronymize(project_name)
     else:
-        return disemvowel(project_name)
+        project_key = disemvowel(project_name)
+    return project_key[:4]
 
 
 def disemvowel(project_name):
