@@ -127,6 +127,13 @@ function ProjectCreation() {
             field: 'taskKey',
             headerName: 'Task Key',
             flex: 1,
+            renderCell: (params) => {
+                if (typeof params.value === 'string'){
+                    return params.value
+                }else{
+                    return "N/A"
+                }
+            }
         },
         // {
         //     field: 'TaskID', 
