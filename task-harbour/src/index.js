@@ -11,6 +11,7 @@ import ConfirmCode from './components/confirmCode/confirmCode';
 import EmailVerification from './components/EmailVerification/EmailVerification';
 import TaskList from './components/taskList/taskList';
 import SelectProject from './components/selectProject/select-project';
+import TaskModal from './components/taskmodal/taskmodal';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 
@@ -30,6 +31,7 @@ root.render(
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/projects/:id" element={<TaskList />} />
           <Route path="/select-project" element={<SelectProject />} />
+          <Route path="/create-task" element={<TaskModal />} />
         </Routes>
       </div>
     </Router>
