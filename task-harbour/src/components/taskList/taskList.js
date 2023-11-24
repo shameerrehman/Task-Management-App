@@ -85,6 +85,7 @@ function ProjectCreation() {
                             'taskLink':task.taskID,
                             'id': index,
                             'TaskID': task.taskID,
+                            'taskKey': task.taskKey,
                             'ProjectID': task.projectID,
                             'assigneeUserID': task.assigneeUserID,
                             'creatorUserID' : task.creatorUserID,
@@ -121,6 +122,18 @@ function ProjectCreation() {
             renderCell: (params) => (
                 <NavLink to={`/task/${params.value}`}><button className={'taskLink'}>Open Task</button></NavLink>
             )
+        },
+        {
+            field: 'taskKey',
+            headerName: 'Task Key',
+            flex: 1,
+            renderCell: (params) => {
+                if (typeof params.value === 'string'){
+                    return params.value
+                }else{
+                    return "N/A"
+                }
+            }
         },
         // {
         //     field: 'TaskID', 
