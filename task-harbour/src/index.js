@@ -13,6 +13,7 @@ import TaskList from './components/taskList/taskList';
 import SelectProject from './components/selectProject/select-project';
 import TaskModal from './components/taskmodal/taskmodal';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './components/home/home';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -22,7 +23,7 @@ root.render(
       <NavBar/>
       <div>
         <Routes>
-          {/* <Route path="/" element={} /> */}
+          <Route path="/" element={<Home/>} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/projectCreation" element={<ProjectCreation />} />
