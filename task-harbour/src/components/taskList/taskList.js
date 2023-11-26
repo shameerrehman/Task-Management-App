@@ -150,7 +150,7 @@ function TaskList() {
                     (
                         <>
                             {console.log(tasksList[0])}
-                            <Link to={`/task/${params.value}`}><button className={'taskLink'} style={{ margin: "0.5rem" }}>Open Task</button></Link>
+                            {/* <Link to={`/task/${params.value}`}><button className={'taskLink'} style={{ margin: "0.5rem" }}>Open Task</button></Link> */}
                             <Link to={{
                                 pathname: `/update-task`,
                                 search: `?projectId=${getProjectId()}`,
