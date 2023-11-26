@@ -90,12 +90,14 @@ function ProjectCreation() {
                     })
                     //Get user names
                     var username = JSON.parse(localStorage.getItem("authData")).username;
-                    if(currentUserOnly | task.assigneeUserID == username | task.creatorUserID == username){
+                    console.log("first load state: currentUSerOnly is "+currentUserOnly)
+                    if(allowLoad | currentUserOnly | task.assigneeUserID == username | task.creatorUserID == username){
                         sampledata["data"].push(
                             {
                                 'taskLink': task.taskID,
                                 'id': index,
                                 'TaskID': task.taskID,
+                                'taskKey': task.taskKey,
                                 'ProjectID': task.projectID,
                                 'assigneeUserID': task.assigneeUserID,
                                 'creatorUserID': task.creatorUserID,
