@@ -65,6 +65,44 @@
     padding: 1vh;
 }
 
+.taskLabelDiv{
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 50px;
+    scrollbar-width: thin;
+    padding-right: 5px;
+    scroll-behavior: smooth;
+    /* background-color: white;
+    border-style: solid;
+    border-width: 0.001vw;
+    border-color: black;
+    align-items: center;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+    flex-wrap: wrap; */
+}
+
+/* width */
+.taskLabelDiv::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+/* Track */
+.taskLabelDiv::-webkit-scrollbar-track {
+background: #f1f1f1;
+}
+
+/* Handle */
+.taskLabelDiv::-webkit-scrollbar-thumb{
+background: #888;
+}
+
+/* Handle on hover */
+.taskLabelDiv::-webkit-scrollbar-thumb:hover{
+background: #555;
+}
+
 .taskLabel{
     background-color: white;
     border-style: solid;
@@ -74,6 +112,7 @@
     font-weight: bold;
     border-radius: 10px;
     padding: 1vh;
+    flex-wrap: wrap;
 }
 
 .spacingLabel{
@@ -85,4 +124,10 @@
     font-weight: bold;
     border-radius: 1px;
     padding: 0.5vh;
+}
+
+.tableHeaderBreak{
+    line-height:20px;
+    display: block;
+    /* margin: 10px 0; */
 }
