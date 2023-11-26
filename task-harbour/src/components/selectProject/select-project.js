@@ -1,5 +1,4 @@
 import './select-project.css';
-import React from 'react';
 import { useState } from "react";
 
 function SelectProject() {
@@ -67,6 +66,6 @@ function SelectProject() {
             </section>
         </div>
     );
-};
+}
 
 export default SelectProject;
