@@ -157,16 +157,15 @@ function ProjectCreation() {
     const columns = [
         {
             field: 'taskLink',
-            headerName: 'Task Link',
-            // flex: 0.5,
+            headerName: '',
             renderCell: (params) => (
-                <NavLink to={`/task/${params.value}`}><button className={'taskLink'}>Open Task</button></NavLink>
+                <NavLink to={`/task/${params.value}`}><button className={'taskLink'}>Edit Task</button></NavLink>
             )
         },
         {
             field: 'taskKey',
             headerName: 'Task Key',
-            flex: 1,
+            width: 100, 
             renderCell: (params) => {
                 if (typeof params.value === 'string'){
                     return params.value
@@ -175,23 +174,9 @@ function ProjectCreation() {
                 }
             }
         },
-        // {
-        //     field: 'TaskID', 
-        //     headerName: 'Task ID (remove?)', 
-        //     width: 10
-        //     // flex: 1,
-
-        // },
-        // {
-        //     field: 'ProjectID',
-        //     headerName: 'Project ID (remove?)',
-        //     // flex: 1,
-        //     width: 10,
-        // },
         {
             field: 'assigneeUserID',
             headerName: 'Assignee User ID',
-            // flex: 0.6,
             width: 130,
             renderCell: (params) => {
                 if (params.value) {
@@ -204,25 +189,24 @@ function ProjectCreation() {
         {
             field: 'creatorUserID',
             headerName: 'Creator User ID',
-            // flex: 0.6,
             width: 130,
         },
         {
             field: 'taskName',
             headerName: 'Task Name',
-            flex: 0.7,
+            width: 350,
         },
         {
             field: 'taskDescription',
             headerName: 'Task Description',
             description: 'This column has a value getter and is not sortable.',
-            flex: 1.3,
+            // flex: 1.3,
+            width:300,
         },
         {
             field: 'taskDueDate',
             headerName: 'Task Due Date',
-            // flex: 1,
-            width: 140,
+            width: 170,
             renderCell: (params) => {
                 if (params.value) {
                     var parsedDate = new Date(params.value);
@@ -240,8 +224,6 @@ function ProjectCreation() {
         {
             field: 'status',
             headerName: 'Task Status',
-            // flex: 0.7,
-            // width: 2,
             renderCell: (params) => (
                 <label className={'statusLabel'}>{params.value}</label>
             )
@@ -249,12 +231,13 @@ function ProjectCreation() {
         {
             field: 'priority',
             headerName: 'Task Priority',
-            // flex: 0.7,
             renderCell: (params) => {
                 if (params.value == "Critical") {
                     return <label className={'criticalLabel'}>{params.value}</label>
                 } else if (params.value == "Minor") {
                     return <label className={'minorLabel'}>{params.value}</label>
+                } else if (params.value == "Medium") {
+                    return <label className={'mediumLabel'}>{params.value}</label>
                 } else if (params.value == "Major") {
                     return <label className={'majorLabel'}>{params.value}</label>
                 } else {
@@ -265,11 +248,9 @@ function ProjectCreation() {
         },
         {
             field: 'storyPoints',
-            // headerName: 'Story Points',
             renderHeader: (params) => (
                 <a className='tableHeaderBreak' >Story<br className='tableHeaderBreak'></br>Points</a>
             ),
-            // flex: 0.4,  
             width: 60,
             renderCell: (params) => {
                 if (params.value) {
@@ -282,7 +263,7 @@ function ProjectCreation() {
         {
             field: 'DictionaryTaskTags',
             headerName: 'Task Tags',
-            flex: 1,
+            width:300,
             renderCell: (params) => {
                 if (params.value != "null") {
                     try {
@@ -314,6 +295,7 @@ function ProjectCreation() {
         <div className="taskList">
             {
                 <DataGrid
+                    className='taskListDataGrid'
                     rows={tasksList}
                     columns={columns}
                     initialState={{

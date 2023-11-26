@@ -8,9 +8,11 @@
 }
 .taskList .css-ptkaw2-MuiDataGrid-root{
     border-style: none;
-
 }
 
+.taskListDataGrid{
+    /* overflow-x: scroll; */
+}
 .taskLink{
     background-color: aqua;
     border-color : aqua;
@@ -28,12 +30,18 @@
 }
 
 .majorLabel{
-    background-color: orange;
+    background-color: lightcoral;
     font-weight: bold;
     border-radius: 10px;
     padding: 1vh;
 }
 
+.mediumLabel{
+    background-color: orange;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
 
 .minorLabel{
     background-color: yellow;
@@ -66,12 +74,12 @@
 }
 
 .taskLabelDiv{
-    overflow-y: scroll;
+    /* overflow-y: scroll;
     overflow-x: hidden;
     height: 50px;
     scrollbar-width: thin;
     padding-right: 5px;
-    scroll-behavior: smooth;
+    scroll-behavior: smooth; */
     /* background-color: white;
     border-style: solid;
     border-width: 0.001vw;
@@ -85,22 +93,22 @@
 
 /* width */
 .taskLabelDiv::-webkit-scrollbar {
-    width: 10px;
+    /* width: 10px; */
   }
   
 /* Track */
 .taskLabelDiv::-webkit-scrollbar-track {
-background: #f1f1f1;
+/* background: #f1f1f1; */
 }
 
 /* Handle */
 .taskLabelDiv::-webkit-scrollbar-thumb{
-background: #888;
+/* background: #888; */
 }
 
 /* Handle on hover */
 .taskLabelDiv::-webkit-scrollbar-thumb:hover{
-background: #555;
+/* background: #555; */
 }
 
 .taskLabel{
