@@ -1,23 +1,24 @@
 import './taskList.css';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { NavLink, json } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-function ProjectCreation() {
+function TaskList() {
+    const [loading, setLoading] = useState(true);
     const [tasksList, setTasksList] = useState([{
-        'taskLink':"LOADING",
+        'taskLink': "LOADING",
         'id': 0,
         'assigneeUserID': "LOADING",
-        'creatorUserID' : "LOADING",
+        'creatorUserID': "LOADING",
         'taskName': "LOADING",
         'taskDescription': "LOADING",
-        'taskDueDate': "0",
+        'taskDueDate': "LOADING",
         'DictionaryTaskTags': "LOADING",
         'status': "LOADING",
         'priority': "LOADING",
         'storyPoints': "LOADING",
-    }])
-    const [allowLoad, setAllowLoad] = useState(true)
+    }]);
+    const [allowLoad, setAllowLoad] = useState(true);
     function makeErrorMessage(errorText) {
         // Handle errors or display a message to the user
         console.error(errorText);
@@ -40,7 +41,6 @@ function ProjectCreation() {
     function getProjectId() {
         try {
             return window.location.pathname.split('/')[2]
-            // return "9e0cad6b-4645-45a2-849d-790f449a57c7" // temp
         } catch (error) {
             // Handle errors or display a message to the user
             console.error('Error getting project ID:', error);
@@ -48,79 +48,118 @@ function ProjectCreation() {
         }
     }
 
+    const CustomToolbar = () => {
+        const navigate = useNavigate();
+
+        const handleCreateTaskClick = () => {
+            const projectId = getProjectId();
+            navigate(`/create-task?projectId=${projectId}`);
+        };
+
+        return (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+                <GridToolbar />
+                <button onClick={handleCreateTaskClick} className="create-task-btn" style={{ margin: "0.5rem" }}>
+                    New Task
+                </button>
+            </div>
+        );
+    };
+
     function getProjectTasks() {
         if (!allowLoad) {
-            return
+            return;
         }
+        setLoading(true);
         try {
-            fetch('https://ogl7lxkrnfk5y6crhwzrdodzae0tmlyg.lambda-url.us-east-1.on.aws/?' + 
+            fetch('https://ogl7lxkrnfk5y6crhwzrdodzae0tmlyg.lambda-url.us-east-1.on.aws/?' +
                 new URLSearchParams({
                     projectID: getProjectId()
-                }),{
+                }),
+                {
                     method: 'GET'
                 }
-            ).then(response =>{
+            ).then(response => {
                 return response.json()
+            })
+                .then(jsonData => {
+                    console.log(jsonData)
+                    var sampledata = {
+                        "data": []
+                    }
+                    var index = 0
+                    jsonData.data.forEach(task => {
+                        //Get project name
+                        // fetch('https://seyi6tnkiy76d4eril23nq4uqm0nzaix.lambda-url.us-east-1.on.aws/', {
+                        //     method: 'POST',
+                        //     headers: {
+                        //         'Content-Type': 'application/json',
+                        //     },
+                        //     body: JSON.stringify({}),
+                        // })
 
-            })
-            .then(jsonData =>{
-                console.log(jsonData)
-                var sampledata = {
-                    "data": []
-                }
-                var index = 0
-                jsonData.data.forEach(task => {
-                    //Get project name
-                    fetch('https://seyi6tnkiy76d4eril23nq4uqm0nzaix.lambda-url.us-east-1.on.aws/',{
-                        method: 'POST',
-                        headers:{
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({}),
-                    })
-                    //Get user names
-
-                    sampledata["data"].push(
-                        {
-                            'taskLink':task.taskID,
-                            'id': index,
-                            'TaskID': task.taskID,
-                            'taskKey': task.taskKey,
-                            'ProjectID': task.projectID,
-                            'assigneeUserID': task.assigneeUserID,
-                            'creatorUserID' : task.creatorUserID,
-                            'taskName': task.taskName,
-                            'taskDescription': task.taskDescription,
-                            'taskDueDate': task.taskDueDate,
-                            'DictionaryTaskTags': JSON.stringify(task.taskTags),
-                            'status': task.status,
-                            'priority': task.priority,
-                            'storyPoints': task.storyPoints,
-                        }
-                    )
-                    index += 1;
-                });
-                setTasksList(sampledata.data)
-            })
-            .catch(error=>{
-                console.error(error)
-                setTasksList({"error":error.message})
-            })
+                        // console.log({ task })
+                        sampledata["data"].push(
+                            {
+                                'taskLink': task.taskID,
+                                'id': index,
+                                'TaskID': task.taskID,
+                                'taskKey': task.taskKey,
+                                'ProjectID': task.projectID,
+                                'assigneeUserID': task.assigneeUserID,
+                                'creatorUserID': task.creatorUserID,
+                                'taskName': task.taskName,
+                                'taskDescription': task.taskDescription,
+                                'taskDueDate': task.taskDueDate,
+                                'DictionaryTaskTags': JSON.stringify(task.taskTags),
+                                'status': task.status,
+                                'priority': task.priority,
+                                'storyPoints': task.storyPoints,
+                            }
+                        )
+                        index += 1;
+                    });
+                    setTasksList(sampledata.data);
+                    console.log("setting to false")
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error(error);
+                    setTasksList({ "error": error.message });
+                    console.log("setting to false")
+                    setLoading(false);
+                })
             setAllowLoad(false);
+            console.log("setting to false")
+            setLoading(false);
         } catch (error) {
-            console.error("error getting tasks" + error)
-            setTasksList("error getting tasks" + error)
-            setAllowLoad(false);
+            console.error("error getting tasks" + error);
+            setTasksList("error getting tasks" + error);
+            console.log("setting to false")
+            setLoading(false);
         }
     }
 
     const columns = [
         {
-            field: 'taskLink', 
-            headerName: 'Task Link',
+            field: 'taskLink',
+            headerName: 'Task Actions',
             flex: 1,
             renderCell: (params) => (
-                <NavLink to={`/task/${params.value}`}><button className={'taskLink'}>Open Task</button></NavLink>
+                !loading ?
+                    (
+                        <>
+                            {console.log(tasksList[0])}
+                            {/* <Link to={`/task/${params.value}`}><button className={'taskLink'} style={{ margin: "0.5rem" }}>Open Task</button></Link> */}
+                            <Link to={{
+                                pathname: `/update-task`,
+                                search: `?projectId=${getProjectId()}`,
+
+                            }} state={{ taskProperties: params.row }}>
+                                <button className={'taskLink'} style={{ margin: "0.5rem" }}>Edit Task</button>
+                            </Link>
+                        </>
+                    ) : "LOADING"
             )
         },
         {
@@ -128,9 +167,9 @@ function ProjectCreation() {
             headerName: 'Task Key',
             flex: 1,
             renderCell: (params) => {
-                if (typeof params.value === 'string'){
+                if (typeof params.value === 'string') {
                     return params.value
-                }else{
+                } else {
                     return "N/A"
                 }
             }
@@ -153,9 +192,9 @@ function ProjectCreation() {
             headerName: 'Assignee User ID',
             flex: 0.7,
             renderCell: (params) => {
-                if (params.value){
+                if (params.value) {
                     return params.value
-                }else{
+                } else {
                     return <label>-</label>
                 }
             }
@@ -181,13 +220,15 @@ function ProjectCreation() {
             headerName: 'Task Due Date',
             flex: 1,
             renderCell: (params) => {
-                if (params.value){
-                    var parsedDate = new Date(params.value);                    
-                    return parsedDate.toLocaleString('default', {   weekday: "short",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric", });
-                }else{
+                if (params.value) {
+                    var parsedDate = new Date(params.value);
+                    return parsedDate.toLocaleString('default', {
+                        weekday: "short",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    });
+                } else {
                     return <label>-</label>
                 }
             }
@@ -205,26 +246,25 @@ function ProjectCreation() {
             headerName: 'Task Priority',
             flex: 0.7,
             renderCell: (params) => {
-                if (params.value == "Critical"){
+                if (params.value == "Critical") {
                     return <label className={'criticalLabel'}>{params.value}</label>
-                }else if (params.value == "Minor"){
+                } else if (params.value == "Minor") {
                     return <label className={'minorLabel'}>{params.value}</label>
-                }else if (params.value == "Major"){
+                } else if (params.value == "Major") {
                     return <label className={'majorLabel'}>{params.value}</label>
-                }else{
-                    return params.value   
+                } else {
+                    return params.value
                 }
-                return
             }
         },
         {
             field: 'storyPoints',
             headerName: 'Story Points',
-            flex: 0.4,  
+            flex: 0.4,
             renderCell: (params) => {
-                if (params.value){
+                if (params.value) {
                     return <label className={'pointsLabel'}>{params.value}</label>
-                }else{
+                } else {
                     return <label className={'blankLabel'}>-</label>
                 }
             }
@@ -234,20 +274,18 @@ function ProjectCreation() {
             headerName: 'Task Tags',
             flex: 1,
             renderCell: (params) => {
-                if(params.value != "null"){
+                if (params.value != "null") {
                     try {
                         var labelList = []
-                        JSON.parse(params.value).forEach(tag=>{
+                        JSON.parse(params.value).forEach(tag => {
                             labelList.push(<label className={'taskLabel'}>{tag}</label>)
                             labelList.push(<label className={'spacingLabel'}></label>)
                         })
                         return labelList
-                        
-                    } catch (error) {
-                        return <label>{params.value}</label>                        
-                    }
 
-                    return <label>{params.value}</label>
+                    } catch (error) {
+                        return <label>{params.value}</label>
+                    }
                 }
                 return <label className={'blankLabel'}>-</label>
             }
@@ -255,10 +293,10 @@ function ProjectCreation() {
 
     ];
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        getProjectTasks();
+    }, []);
 
-    };
-    getProjectTasks()
     return (
         <div className="taskList">
             {
@@ -272,13 +310,16 @@ function ProjectCreation() {
                             },
                         },
                     }}
-                    pageSizeOptions={[5,10,15,20,25,100]}
+                    pageSizeOptions={[5, 10, 15, 20, 25, 100]}
                     // checkboxSelection
+                    // components={{
+                    //     Toolbar: CustomToolbar,
+                    // }}
                     disableRowSelectionOnClick
-                    slots={{ toolbar: GridToolbar }}
+                    slots={{ toolbar: CustomToolbar }}
                     slotProps={{
                         toolbar: {
-                          showQuickFilter: true,
+                            showQuickFilter: true,
                         },
                     }}
                 />
@@ -292,4 +333,4 @@ function ProjectCreation() {
     );
 }
 
-export default ProjectCreation;
+export default TaskList;

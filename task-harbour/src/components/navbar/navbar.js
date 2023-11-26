@@ -74,7 +74,7 @@ function NavBar() {
                 )}
                 {isLoggedIn() && (
                     <>
-                        <NavLink to="/projectCreation" className="newProject">+ New Project</NavLink>
+                        <NavLink to="/create-project" className="newProject">+ New Project</NavLink>
                         <NavLink to="/">Home</NavLink>
                         <div  className="dropdown-link" onClick={toggleProjectsDropdown}>Projects</div>
                         {showProjectsDropdown && (

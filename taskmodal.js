@@ -1,7 +1,8 @@
 import './taskmodal.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function TaskModal({ isOpen, onClose, onCreateTask, currentProject }) {
+  console.log({ isOpen, onClose, onCreateTask, currentProject })
   const [taskName, setTaskName] = useState('');
   const [taskDescription, setTaskDescription] = useState('');
   const [estimatedTime, setEstimatedTime] = useState('');
