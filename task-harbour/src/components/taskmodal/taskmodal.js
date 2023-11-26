@@ -15,7 +15,7 @@ function TaskModal({ createOrUpdate }) {
   const [assigneeUserID, setAssigneeUserID] = useState(null);
   const [priority, setPriority] = useState('low');
   const [storyPoints, setStoryPoints] = useState(0);
-
+  const [creatorUserID, setCreatorUserID] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   // const [date, setDate] = useState(new Date());
   // const [startDate, setStartDate] = useState();
@@ -42,6 +42,7 @@ function TaskModal({ createOrUpdate }) {
       setPriority(taskProps.priority);
       setStoryPoints(taskProps.storyPoints);
       setEndDate(new Date(taskProps.taskDueDate));
+      setCreatorUserID(taskProps.creatorUserID);
     }
 
     setTaskProperties(taskProps);
@@ -62,7 +63,7 @@ function TaskModal({ createOrUpdate }) {
       taskDueDate: endDate,
       status: status,
       taskTags: taskTags,
-      creatorUserID: JSON.parse(localStorage.getItem("authData")).username,
+      creatorUserID: creatorUserID || JSON.parse(localStorage.getItem("authData")).username,
       assigneeUserID: assigneeUserID.value,
       priority: priority,
       storyPoints: storyPoints,
