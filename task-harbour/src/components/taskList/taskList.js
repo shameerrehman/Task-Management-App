@@ -143,7 +143,7 @@ function TaskList() {
     const columns = [
         {
             field: 'taskLink',
-            headerName: 'Task Link',
+            headerName: 'Task Actions',
             flex: 1,
             renderCell: (params) => (
                 !loading ?
