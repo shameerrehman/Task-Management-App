@@ -161,6 +161,18 @@ function ProjectCreation() {
                 <NavLink to={`/task/${params.value}`}><button className={'taskLink'}>Open Task</button></NavLink>
             )
         },
+        {
+            field: 'taskKey',
+            headerName: 'Task Key',
+            flex: 1,
+            renderCell: (params) => {
+                if (typeof params.value === 'string'){
+                    return params.value
+                }else{
+                    return "N/A"
+                }
+            }
+        },
         // {
         //     field: 'TaskID', 
         //     headerName: 'Task ID (remove?)', 

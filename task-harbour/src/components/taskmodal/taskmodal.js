@@ -84,7 +84,8 @@ return (
               />
           </div>
           <div className='row'>
-              <input
+              <textarea
+              type="text"
               placeholder="Description"
               value={taskDescription}
               onChange={(e) => setTaskDescription(e.target.value)}
@@ -110,7 +111,7 @@ return (
               onChange={(e) => setStatus(e.target.value)}
               />
           </div>
-          <div>
+          <div className='row'>
               <input
                 type="text"
                 placeholder="Tags (comma-separated)"
@@ -124,7 +125,7 @@ return (
                   onUserSelect={handleAssigneeChange}
                 />
           </div>
-          <div>
+          <div className='row'>
               <input 
                 type="text"
                 placeholder="Creator ID"
@@ -133,7 +134,7 @@ return (
                 onChange={(e) => setCreatorUserID(e.target.value)}
               />
           </div>
-          <div>
+          <div className='row'>
               <label>Priority:</label>
               <select
                 value={priority}
@@ -144,7 +145,7 @@ return (
                 <option value="high">High</option>
               </select>
           </div>
-          <div>
+          <div className='row'>
               <label>Story Points:</label>
               <input
                 type="number"
