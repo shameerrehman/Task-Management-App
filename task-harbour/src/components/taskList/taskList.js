@@ -74,7 +74,6 @@ function ProjectCreation() {
 
             })
             .then(jsonData => {
-                console.log(jsonData)
                 var sampledata = {
                     "data": []
                 }
@@ -90,7 +89,6 @@ function ProjectCreation() {
                     })
                     //Get user names
                     var username = JSON.parse(localStorage.getItem("authData")).username;
-                    console.log("first load state: currentUSerOnly is "+currentUserOnly)
                     if(allowLoad | currentUserOnly | task.assigneeUserID == username | task.creatorUserID == username){
                         sampledata["data"].push(
                             {
@@ -301,7 +299,7 @@ function ProjectCreation() {
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 5,
+                                pageSize: 10,
                             },
                         },
                     }}
@@ -319,11 +317,6 @@ function ProjectCreation() {
                     }}
                 />
             }
-            {(() => {
-                // sample function
-                // console.log(tasksList)
-                // return JSON.stringify(tasksList)
-            })()}
         </div>
     );
 }
