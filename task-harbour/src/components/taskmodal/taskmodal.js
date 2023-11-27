@@ -1,6 +1,6 @@
 import './taskmodal.css';
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import UserSearchDropdown from '../UserSearchDropdown/user-search';
@@ -22,6 +22,7 @@ function TaskModal({ createOrUpdate }) {
   const [endDate, setEndDate] = useState();
 
   const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     // Extract the projectId from the URL query parameters
     const queryParams = new URLSearchParams(location.search);
@@ -50,6 +51,10 @@ function TaskModal({ createOrUpdate }) {
 
   const handleAssigneeChange = selectedOption => {
     setAssigneeUserID(selectedOption);
+  };
+
+  const goToProject = (projectId) => {
+    navigate(`/projects/${projectId}`);
   };
 
   const handleSubmit = (e) => {
@@ -95,7 +100,10 @@ function TaskModal({ createOrUpdate }) {
       });
   }
   function deleteTaskClick() {
-    const projectId = taskProperties.projectID
+    const del = {
+      taskID: taskProperties?.TaskID,
+      projectID: projectID
+    }
     const userConfirmed = window.confirm(`Are you sure you want to delete task: ${taskProperties.taskName} ?`);
     // TODO: apply Delete function URL in fetch below
     // TODO: apply projectID and taskID to the body
@@ -103,13 +111,13 @@ function TaskModal({ createOrUpdate }) {
 
     if (userConfirmed) {
       try {
-        fetch('',
+        fetch('https://pnyyqkztdopu4lohnhqytbknii0smvlv.lambda-url.us-east-1.on.aws/',
             {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json',
               },
-              body: JSON.stringify(),
+              body: JSON.stringify(del),
             }
         ).then(response => {
 
@@ -118,7 +126,7 @@ function TaskModal({ createOrUpdate }) {
       } catch (error) {
         console.error("error getting DELETING task" + error);
       }
-
+      goToProject(projectID)
       console.log("Task deleted");
     }
   }
@@ -227,7 +235,7 @@ function TaskModal({ createOrUpdate }) {
               />
             </div>
             <button type="submit" className='createTaskButton'>{createOrUpdate === "create" ? "Create Task" : "Update Task"}</button>
-            <button type="button" className='deleteTaskButton' >Delete</button>
+            <button type="button" className='deleteTaskButton' onClick={deleteTaskClick}>Delete</button>
           </form></>
       )}
     </div>
