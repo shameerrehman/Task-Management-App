@@ -227,6 +227,7 @@ function TaskModal({ createOrUpdate }) {
               />
             </div>
             <button type="submit" className='createTaskButton'>{createOrUpdate === "create" ? "Create Task" : "Update Task"}</button>
+            <button type="button" className='deleteTaskButton' >Delete</button>
           </form></>
       )}
     </div>

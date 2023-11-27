@@ -63,4 +63,18 @@ button.createTaskButton {
   margin: 10px;
 
 }
+
+button.deleteTaskButton {
+  background-color: #00243C;
+  color: #fff;
+  border: none;
+  width: 100%;
+  font-weight: bold;
+  align-items: center;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  margin: 10px;
+
+}
     
