@@ -67,7 +67,6 @@ function TaskModal({ createOrUpdate }) {
       assigneeUserID: assigneeUserID.value,
       priority: priority,
       storyPoints: storyPoints,
-      assigneeUserID: assigneeUserID?.value
     }
 
     const url = createOrUpdate === 'create' ?
@@ -94,6 +93,34 @@ function TaskModal({ createOrUpdate }) {
         console.log('Error creating new task ' + JSON.stringify(error));
         console.log(newTask);
       });
+  }
+  function deleteTaskClick() {
+    const projectId = taskProperties.projectID
+    const userConfirmed = window.confirm(`Are you sure you want to delete task: ${taskProperties.taskName} ?`);
+    // TODO: apply Delete function URL in fetch below
+    // TODO: apply projectID and taskID to the body
+    // TODO: redirect to taskList after delete
+
+    if (userConfirmed) {
+      try {
+        fetch('',
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(),
+            }
+        ).then(response => {
+
+          return response.json()
+        })
+      } catch (error) {
+        console.error("error getting DELETING task" + error);
+      }
+
+      console.log("Task deleted");
+    }
   }
 
   return (
