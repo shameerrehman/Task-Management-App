@@ -1,5 +1,4 @@
 import './taskList.css';
-import React, { useState } from 'react';
 import {
     DataGrid, GridToolbar,
     GridToolbarContainer,
@@ -13,8 +12,11 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { NavLink, json } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 
-function ProjectCreation() {
+function TaskList() {
+    const [loading, setLoading] = useState(true);
     const [tasksList, setTasksList] = useState([{
         'taskLink': "LOADING",
         'id': 0,
@@ -22,7 +24,7 @@ function ProjectCreation() {
         'creatorUserID': "LOADING",
         'taskName': "LOADING",
         'taskDescription': "LOADING",
-        'taskDueDate': "0",
+        'taskDueDate': "LOADING",
         'DictionaryTaskTags': "LOADING",
         'status': "LOADING",
         'priority': "LOADING",
@@ -53,7 +55,6 @@ function ProjectCreation() {
     function getProjectId() {
         try {
             return window.location.pathname.split('/')[2]
-            // return "9e0cad6b-4645-45a2-849d-790f449a57c7" // temp
         } catch (error) {
             // Handle errors or display a message to the user
             console.error('Error getting project ID:', error);
@@ -61,84 +62,15 @@ function ProjectCreation() {
         }
     }
 
-    function fetchTasks(){
-        try {
-            fetch('https://ogl7lxkrnfk5y6crhwzrdodzae0tmlyg.lambda-url.us-east-1.on.aws/?' +
-                new URLSearchParams({
-                    projectID: getProjectId()
-                }), {
-                method: 'GET'
-            }
-            ).then(response => {
-                return response.json()
-
-            })
-            .then(jsonData => {
-                var sampledata = {
-                    "data": []
-                }
-                var index = 0
-                jsonData.data.forEach(task => {
-                    //Get project name
-                    fetch('https://seyi6tnkiy76d4eril23nq4uqm0nzaix.lambda-url.us-east-1.on.aws/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({}),
-                    })
-                    //Get user names
-                    var username = JSON.parse(localStorage.getItem("authData")).username;
-                    if(allowLoad | currentUserOnly | task.assigneeUserID == username | task.creatorUserID == username){
-                        sampledata["data"].push(
-                            {
-                                'taskLink': task.taskID,
-                                'id': index,
-                                'TaskID': task.taskID,
-                                'taskKey': task.taskKey,
-                                'ProjectID': task.projectID,
-                                'assigneeUserID': task.assigneeUserID,
-                                'creatorUserID': task.creatorUserID,
-                                'taskName': task.taskName,
-                                'taskDescription': task.taskDescription,
-                                'taskDueDate': task.taskDueDate,
-                                'DictionaryTaskTags': JSON.stringify(task.taskTags),
-                                'status': task.status,
-                                'priority': task.priority,
-                                'storyPoints': task.storyPoints,
-                            }
-                        )
-                        index += 1;
-                    }
-
-                });
-                setTasksList(sampledata.data)
-            })
-            .catch(error => {
-                console.error(error)
-                setTasksList({ "error": error.message })
-            })
-        setAllowLoad(false);
-        } catch (error) {
-            console.error("error getting tasks" + error)
-            setTasksList("error getting tasks" + error)
-            setAllowLoad(false);
-        }
-    }
-
-    function getProjectTasks() {
-        if (!allowLoad) {
-            return
-        }
-        fetchTasks()
-    }
-
-    function userTasks(event){
-        fetchTasks()
-        setCurrentUserOnly(event.target.checked)
-    }
-
     function CustomToolbar() {
+        const navigate = useNavigate();
+
+        const handleCreateTaskClick = () => {
+            const projectId = getProjectId();
+            navigate(`/create-task?projectId=${projectId}`);
+        };
+
+
         return (
             <GridToolbarContainer>
                 <GridToolbarColumnsButton />
@@ -148,16 +80,132 @@ function ProjectCreation() {
                 <FormGroup>
                     <FormControlLabel control={<Switch checked={currentUserOnly} onChange={(e)=>userTasks(e)}/>} label="Only show my tasks" />
                 </FormGroup>
+                <button onClick={handleCreateTaskClick} className="create-task-btn" style={{ margin: "0.5rem" }}>
+                    New Task
+                </button>
             </GridToolbarContainer>
         );
+    }
+
+    // const CustomToolbar = () => {
+
+    //     return (
+    //         <div style={{ display: 'flex', alignItems: 'center' }}>
+    //             <GridToolbar />
+                
+    //         </div>
+    //     );
+    // };
+
+    function getProjectTasks(forceLoad=false) {
+        if (!allowLoad && !forceLoad) {
+            return;
+        }
+        setLoading(true);
+        try {
+            fetch('https://ogl7lxkrnfk5y6crhwzrdodzae0tmlyg.lambda-url.us-east-1.on.aws/?' +
+                new URLSearchParams({
+                    projectID: getProjectId()
+                }), {
+                method: 'GET'
+            }).then(response => {
+                return response.json()
+            })
+                .then(jsonData => {
+                    // console.log(jsonData)
+                    var sampledata = {
+                        "data": []
+                    }
+                    var index = 0
+                    jsonData.data.forEach(task => {
+                        //Get project name
+                        // fetch('https://seyi6tnkiy76d4eril23nq4uqm0nzaix.lambda-url.us-east-1.on.aws/', {
+                        //     method: 'POST',
+                        //     headers: {
+                        //         'Content-Type': 'application/json',
+                        //     },
+                        //     body: JSON.stringify({}),
+                        // })
+
+                        // console.log({ task })
+                        var username = JSON.parse(localStorage.getItem("authData")).username;
+                        console.log(username);
+                        if(allowLoad | currentUserOnly | task.assigneeUserID == username | task.creatorUserID == username){
+                            sampledata["data"].push(
+                                {
+                                    'taskLink': task.taskID,
+                                    'id': index,
+                                    'TaskID': task.taskID,
+                                    'taskKey': task.taskKey,
+                                    'ProjectID': task.projectID,
+                                    'assigneeUserID': task.assigneeUserID,
+                                    'creatorUserID': task.creatorUserID,
+                                    'taskName': task.taskName,
+                                    'taskDescription': task.taskDescription,
+                                    'taskDueDate': task.taskDueDate,
+                                    'DictionaryTaskTags': JSON.stringify(task.taskTags),
+                                    'status': task.status,
+                                    'priority': task.priority,
+                                    'storyPoints': task.storyPoints,
+                                }
+                            )
+                        }
+                        index += 1;
+                    });
+                    setTasksList(sampledata.data);
+                    // console.log("setting to false")
+                    setLoading(false);
+                })
+                .catch(error => {
+                    console.error(error);
+                    setTasksList({ "error": error.message });
+                    // console.log("setting to false")
+                    setLoading(false);
+                })
+            setAllowLoad(false);
+            // console.log("setting to false")
+            setLoading(false);
+        } catch (error) {
+            console.error("error getting tasks" + error);
+            setTasksList("error getting tasks" + error);
+            console.log("setting to false")
+            setLoading(false);
+        }
+    }
+
+    // function getProjectTasks() {
+    //     if (!allowLoad) {
+    //         return
+    //     }
+    //     fetchTasks()
+    // }
+
+    function userTasks(event){
+        getProjectTasks(true)
+        setCurrentUserOnly(event.target.checked)
     }
 
     const columns = [
         {
             field: 'taskLink',
-            headerName: '',
+            headerName: 'Task Actions',
+            // flex: 1,
+            width: 100,
             renderCell: (params) => (
-                <NavLink to={`/task/${params.value}`}><button className={'taskLink'}>Edit Task</button></NavLink>
+                !loading ?
+                    (
+                        <>
+                            {/* {console.log(tasksList[0])} */}
+                            {/* <Link to={`/task/${params.value}`}><button className={'taskLink'} style={{ margin: "0.5rem" }}>Open Task</button></Link> */}
+                            <Link to={{
+                                pathname: `/update-task`,
+                                search: `?projectId=${getProjectId()}`,
+
+                            }} state={{ taskProperties: params.row }}>
+                                <button className={'taskLink'} style={{ margin: "0.5rem" }}>Edit Task</button>
+                            </Link>
+                        </>
+                    ) : "LOADING"
             )
         },
         {
@@ -165,9 +213,9 @@ function ProjectCreation() {
             headerName: 'Task Key',
             width: 100, 
             renderCell: (params) => {
-                if (typeof params.value === 'string'){
+                if (typeof params.value === 'string') {
                     return params.value
-                }else{
+                } else {
                     return "N/A"
                 }
             }
@@ -241,7 +289,6 @@ function ProjectCreation() {
                 } else {
                     return params.value
                 }
-                return
             }
         },
         {
@@ -276,8 +323,6 @@ function ProjectCreation() {
                     } catch (error) {
                         return <label>{params.value}</label>
                     }
-
-                    return <label>{params.value}</label>
                 }
                 return <label className={'blankLabel'}>-</label>
             }
@@ -285,10 +330,10 @@ function ProjectCreation() {
 
     ];
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        getProjectTasks();
+    }, []);
 
-    };
-    getProjectTasks()
     return (
         <div className="taskList">
             {
@@ -305,11 +350,11 @@ function ProjectCreation() {
                     }}
                     pageSizeOptions={[5, 10, 15, 20, 25, 100]}
                     // checkboxSelection
+                    // components={{
+                    //     Toolbar: CustomToolbar,
+                    // }}
                     disableRowSelectionOnClick
-                    slots={{
-                        // toolbar: GridToolbar 
-                        toolbar: CustomToolbar
-                    }}
+                    slots={{ toolbar: CustomToolbar }}
                     slotProps={{
                         toolbar: {
                             showQuickFilter: true,
@@ -321,4 +366,4 @@ function ProjectCreation() {
     );
 }
 
-export default ProjectCreation;
+export default TaskList;

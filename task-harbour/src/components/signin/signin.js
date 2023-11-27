@@ -1,5 +1,5 @@
 import './signin.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function Signin() {
   const [formData, setFormData] = useState({
@@ -57,7 +57,7 @@ function Signin() {
 
   return (
     <div className="Signin">
-    <h1>Sign In</h1>
+    <h1>Sign in</h1>
     {isSubmitted ? (
         <div>Form submitted successfully!</div>
       ) : (

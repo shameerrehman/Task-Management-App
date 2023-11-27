@@ -6,7 +6,7 @@ import Signup from './components/signup/signup';
 import NavBar from './components/navbar/navbar';
 import Signin from './components/signin/signin';
 import ProjectCreation from './components/projectCreation/projectCreation';
-import ForgotPassword from './components/ForgotPassword/ForgotPassword'; 
+import ForgotPassword from './components/ForgotPassword/ForgotPassword';
 import ConfirmCode from './components/confirmCode/confirmCode';
 import EmailVerification from './components/EmailVerification/EmailVerification';
 import TaskList from './components/taskList/taskList';
@@ -20,19 +20,20 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Router>
-      <NavBar/>
+      <NavBar />
       <div>
         <Routes>
-          <Route path="/" element={<Home/>} />
+          <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
-          <Route path="/projectCreation" element={<ProjectCreation />} />
+          <Route path="/create-project" element={<ProjectCreation />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/confirm-code" element={<ConfirmCode />} />
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/projects/:id" element={<TaskList />} />
           <Route path="/select-project" element={<SelectProject />} />
-          <Route path="/create-task" element={<TaskModal />} />
+          <Route path="/create-task" element={<TaskModal createOrUpdate="create"/>} />
+          <Route path="/update-task" element={<TaskModal createOrUpdate="update" />} />
         </Routes>
       </div>
     </Router>

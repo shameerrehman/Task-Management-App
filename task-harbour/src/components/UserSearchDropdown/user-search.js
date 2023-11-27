@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 
-const UserSearchDropdown = ({ onUserSelect }) => {
+const UserSearchDropdown = ({ onUserSelect, initialValue = null }) => {
   const [options, setOptions] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
@@ -46,6 +46,7 @@ const UserSearchDropdown = ({ onUserSelect }) => {
   return (
     <Select
       options={options}
+      value={initialValue}
       isSearchable
       placeholder="Search for a user..."
       onInputChange={handleInputChange}
