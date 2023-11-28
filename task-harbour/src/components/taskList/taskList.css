@@ -8,10 +8,10 @@
 }
 .taskList .css-ptkaw2-MuiDataGrid-root{
     border-style: none;
-
 }
 
 .taskLink{
+    cursor: pointer;
     background-color: #00243C;
     border-color : #00243C;
     color: white;
@@ -29,12 +29,18 @@
 }
 
 .majorLabel{
-    background-color: orange;
+    background-color: lightcoral;
     font-weight: bold;
     border-radius: 10px;
     padding: 1vh;
 }
 
+.mediumLabel{
+    background-color: orange;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 1vh;
+}
 
 .minorLabel{
     background-color: yellow;
@@ -66,6 +72,7 @@
     padding: 1vh;
 }
 
+
 .taskLabel{
     background-color: white;
     border-style: solid;
@@ -75,6 +82,7 @@
     font-weight: bold;
     border-radius: 10px;
     padding: 1vh;
+    flex-wrap: wrap;
 }
 
 .spacingLabel{
@@ -88,7 +96,13 @@
     padding: 0.5vh;
 }
 
+.tableHeaderBreak{
+    line-height:20px;
+    display: block;
+    /* margin: 10px 0; */
+}
 .create-task-btn{
+    cursor: pointer;
     padding: 10px 20px; 
     font-weight: bold;
     color: #FAFAFA;
