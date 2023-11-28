@@ -59,7 +59,7 @@ function TaskModal({ createOrUpdate }) {
 
   const goToProject = (projectId) => {
     navigate(`/projects/${projectId}`);
-  }'
+  };
 
   const resetForm = () => {
     setTaskName('');
