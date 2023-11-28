@@ -1,6 +1,18 @@
 import './taskList.css';
-import { useEffect, useState } from 'react';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import {
+    DataGrid, GridToolbar,
+    GridToolbarContainer,
+    GridToolbarColumnsButton,
+    GridToolbarFilterButton,
+    GridToolbarDensitySelector,
+    GridToolbarExport
+} from '@mui/x-data-grid';
+
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import { NavLink, json } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 
 function TaskList() {
@@ -17,8 +29,10 @@ function TaskList() {
         'status': "LOADING",
         'priority': "LOADING",
         'storyPoints': "LOADING",
-    }]);
-    const [allowLoad, setAllowLoad] = useState(true);
+    }])
+    const [allowLoad, setAllowLoad] = useState(true)
+    const [currentUserOnly, setCurrentUserOnly] = useState(false)
+    
     function makeErrorMessage(errorText) {
         // Handle errors or display a message to the user
         console.error(errorText);
@@ -48,7 +62,7 @@ function TaskList() {
         }
     }
 
-    const CustomToolbar = () => {
+    function CustomToolbar() {
         const navigate = useNavigate();
 
         const handleCreateTaskClick = () => {
@@ -56,18 +70,35 @@ function TaskList() {
             navigate(`/create-task?projectId=${projectId}`);
         };
 
+
         return (
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-                <GridToolbar />
+            <GridToolbarContainer>
+                <GridToolbarColumnsButton />
+                <GridToolbarFilterButton />
+                <GridToolbarDensitySelector />
+                <GridToolbarExport />
+                <FormGroup>
+                    <FormControlLabel control={<Switch checked={currentUserOnly} onChange={(e)=>userTasks(e)}/>} label="Only show my tasks" />
+                </FormGroup>
                 <button onClick={handleCreateTaskClick} className="create-task-btn" style={{ margin: "0.5rem" }}>
                     New Task
                 </button>
-            </div>
+            </GridToolbarContainer>
         );
-    };
+    }
 
-    function getProjectTasks() {
-        if (!allowLoad) {
+    // const CustomToolbar = () => {
+
+    //     return (
+    //         <div style={{ display: 'flex', alignItems: 'center' }}>
+    //             <GridToolbar />
+                
+    //         </div>
+    //     );
+    // };
+
+    function getProjectTasks(forceLoad=false) {
+        if (!allowLoad && !forceLoad) {
             return;
         }
         setLoading(true);
@@ -75,15 +106,13 @@ function TaskList() {
             fetch('https://ogl7lxkrnfk5y6crhwzrdodzae0tmlyg.lambda-url.us-east-1.on.aws/?' +
                 new URLSearchParams({
                     projectID: getProjectId()
-                }),
-                {
-                    method: 'GET'
-                }
-            ).then(response => {
+                }), {
+                method: 'GET'
+            }).then(response => {
                 return response.json()
             })
                 .then(jsonData => {
-                    console.log(jsonData)
+                    // console.log(jsonData)
                     var sampledata = {
                         "data": []
                     }
@@ -99,38 +128,42 @@ function TaskList() {
                         // })
 
                         // console.log({ task })
-                        sampledata["data"].push(
-                            {
-                                'taskLink': task.taskID,
-                                'id': index,
-                                'TaskID': task.taskID,
-                                'taskKey': task.taskKey,
-                                'ProjectID': task.projectID,
-                                'assigneeUserID': task.assigneeUserID,
-                                'creatorUserID': task.creatorUserID,
-                                'taskName': task.taskName,
-                                'taskDescription': task.taskDescription,
-                                'taskDueDate': task.taskDueDate,
-                                'DictionaryTaskTags': JSON.stringify(task.taskTags),
-                                'status': task.status,
-                                'priority': task.priority,
-                                'storyPoints': task.storyPoints,
-                            }
-                        )
+                        var username = JSON.parse(localStorage.getItem("authData")).username;
+                        console.log(username);
+                        if(allowLoad | currentUserOnly | task.assigneeUserID == username | task.creatorUserID == username){
+                            sampledata["data"].push(
+                                {
+                                    'taskLink': task.taskID,
+                                    'id': index,
+                                    'TaskID': task.taskID,
+                                    'taskKey': task.taskKey,
+                                    'ProjectID': task.projectID,
+                                    'assigneeUserID': task.assigneeUserID,
+                                    'creatorUserID': task.creatorUserID,
+                                    'taskName': task.taskName,
+                                    'taskDescription': task.taskDescription,
+                                    'taskDueDate': task.taskDueDate,
+                                    'DictionaryTaskTags': JSON.stringify(task.taskTags),
+                                    'status': task.status,
+                                    'priority': task.priority,
+                                    'storyPoints': task.storyPoints,
+                                }
+                            )
+                        }
                         index += 1;
                     });
                     setTasksList(sampledata.data);
-                    console.log("setting to false")
+                    // console.log("setting to false")
                     setLoading(false);
                 })
                 .catch(error => {
                     console.error(error);
                     setTasksList({ "error": error.message });
-                    console.log("setting to false")
+                    // console.log("setting to false")
                     setLoading(false);
                 })
             setAllowLoad(false);
-            console.log("setting to false")
+            // console.log("setting to false")
             setLoading(false);
         } catch (error) {
             console.error("error getting tasks" + error);
@@ -140,16 +173,29 @@ function TaskList() {
         }
     }
 
+    // function getProjectTasks() {
+    //     if (!allowLoad) {
+    //         return
+    //     }
+    //     fetchTasks()
+    // }
+
+    function userTasks(event){
+        getProjectTasks(true)
+        setCurrentUserOnly(event.target.checked)
+    }
+
     const columns = [
         {
             field: 'taskLink',
             headerName: 'Task Actions',
-            flex: 1,
+            // flex: 1,
+            width: 100,
             renderCell: (params) => (
                 !loading ?
                     (
                         <>
-                            {console.log(tasksList[0])}
+                            {/* {console.log(tasksList[0])} */}
                             {/* <Link to={`/task/${params.value}`}><button className={'taskLink'} style={{ margin: "0.5rem" }}>Open Task</button></Link> */}
                             <Link to={{
                                 pathname: `/update-task`,
@@ -165,7 +211,7 @@ function TaskList() {
         {
             field: 'taskKey',
             headerName: 'Task Key',
-            flex: 1,
+            width: 100, 
             renderCell: (params) => {
                 if (typeof params.value === 'string') {
                     return params.value
@@ -174,23 +220,10 @@ function TaskList() {
                 }
             }
         },
-        // {
-        //     field: 'TaskID', 
-        //     headerName: 'Task ID (remove?)', 
-        //     width: 10
-        //     // flex: 1,
-
-        // },
-        // {
-        //     field: 'ProjectID',
-        //     headerName: 'Project ID (remove?)',
-        //     // flex: 1,
-        //     width: 10,
-        // },
         {
             field: 'assigneeUserID',
             headerName: 'Assignee User ID',
-            flex: 0.7,
+            width: 130,
             renderCell: (params) => {
                 if (params.value) {
                     return params.value
@@ -202,23 +235,24 @@ function TaskList() {
         {
             field: 'creatorUserID',
             headerName: 'Creator User ID',
-            flex: 0.7,
+            width: 130,
         },
         {
             field: 'taskName',
             headerName: 'Task Name',
-            flex: 0.7,
+            width: 350,
         },
         {
             field: 'taskDescription',
             headerName: 'Task Description',
             description: 'This column has a value getter and is not sortable.',
-            flex: 1.3,
+            // flex: 1.3,
+            width:300,
         },
         {
             field: 'taskDueDate',
             headerName: 'Task Due Date',
-            flex: 1,
+            width: 170,
             renderCell: (params) => {
                 if (params.value) {
                     var parsedDate = new Date(params.value);
@@ -236,7 +270,6 @@ function TaskList() {
         {
             field: 'status',
             headerName: 'Task Status',
-            flex: 0.7,
             renderCell: (params) => (
                 <label className={'statusLabel'}>{params.value}</label>
             )
@@ -244,12 +277,13 @@ function TaskList() {
         {
             field: 'priority',
             headerName: 'Task Priority',
-            flex: 0.7,
             renderCell: (params) => {
                 if (params.value == "Critical") {
                     return <label className={'criticalLabel'}>{params.value}</label>
                 } else if (params.value == "Minor") {
                     return <label className={'minorLabel'}>{params.value}</label>
+                } else if (params.value == "Medium") {
+                    return <label className={'mediumLabel'}>{params.value}</label>
                 } else if (params.value == "Major") {
                     return <label className={'majorLabel'}>{params.value}</label>
                 } else {
@@ -259,8 +293,10 @@ function TaskList() {
         },
         {
             field: 'storyPoints',
-            headerName: 'Story Points',
-            flex: 0.4,
+            renderHeader: (params) => (
+                <a className='tableHeaderBreak' >Story<br className='tableHeaderBreak'></br>Points</a>
+            ),
+            width: 60,
             renderCell: (params) => {
                 if (params.value) {
                     return <label className={'pointsLabel'}>{params.value}</label>
@@ -272,16 +308,17 @@ function TaskList() {
         {
             field: 'DictionaryTaskTags',
             headerName: 'Task Tags',
-            flex: 1,
+            width:300,
             renderCell: (params) => {
                 if (params.value != "null") {
                     try {
                         var labelList = []
                         JSON.parse(params.value).forEach(tag => {
                             labelList.push(<label className={'taskLabel'}>{tag}</label>)
-                            labelList.push(<label className={'spacingLabel'}></label>)
+                            // labelList.push(<label className={'spacingLabel'}></label>)
                         })
-                        return labelList
+                        // return labelList
+                        return <div className='taskLabelDiv'>{labelList}</div>
 
                     } catch (error) {
                         return <label>{params.value}</label>
@@ -301,12 +338,13 @@ function TaskList() {
         <div className="taskList">
             {
                 <DataGrid
+                    className='taskListDataGrid'
                     rows={tasksList}
                     columns={columns}
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 5,
+                                pageSize: 10,
                             },
                         },
                     }}
@@ -324,11 +362,6 @@ function TaskList() {
                     }}
                 />
             }
-            {(() => {
-                // sample function
-                // console.log(tasksList)
-                // return JSON.stringify(tasksList)
-            })()}
         </div>
     );
 }
