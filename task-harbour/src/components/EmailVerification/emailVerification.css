@@ -60,7 +60,7 @@ body {
     }
 }
 
-input:not([type="checkbox"]) {
+input:not([type="checkbox"]), select {
     padding: 7px;
     width: 100%;
     border: none;
