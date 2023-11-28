@@ -1,7 +1,7 @@
 import './projectCreation.css';
-import React, { useState } from 'react';
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import UserSearchDropdown from '../UserSearchDropdown/user-search';
 
 
@@ -22,8 +22,11 @@ function ProjectCreation() {
     });
 
     const [isSubmitted, setIsSubmitted] = useState(false);
-
-    const [date, setDate] = useState(new Date());
+    const [startDateSelected, setStartDateSelected] = useState(false);
+    
+    // Get current date
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Set time to the start of the day
     const [startDate, setStartDate] = useState();
     const [endDate, setEndDate] = useState();
 
@@ -189,6 +192,7 @@ function ProjectCreation() {
                         <label>Project Lead: </label>
                         <UserSearchDropdown 
                             onUserSelect={handleProjectLeadChange}
+                            initialValue={projectLeadSelected}
                         />
                         {/* <input
                             type="text" // DEFAULT IS CREATOR
@@ -210,6 +214,8 @@ function ProjectCreation() {
                                 selected={startDate}
                                 onChange={date => setStartDate(date)}
                                 startDate={startDate}
+                                minDate={currentDate}
+                                onSelect={() => setStartDateSelected(true)}
                             />
                         </div>
                     </div>
@@ -225,6 +231,7 @@ function ProjectCreation() {
                                 endDate={endDate}
                                 startDate={startDate}
                                 minDate={startDate}
+                                disabled={!startDateSelected}
                             />
                         </div>
                     </div>

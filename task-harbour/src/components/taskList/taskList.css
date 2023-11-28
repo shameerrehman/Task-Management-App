@@ -12,6 +12,7 @@
 }
 
 .taskLink{
+    cursor: pointer;
     background-color: #00243C;
     border-color : #00243C;
     color: white;
@@ -89,6 +90,7 @@
 }
 
 .create-task-btn{
+    cursor: pointer;
     padding: 10px 20px; 
     font-weight: bold;
     color: #FAFAFA;

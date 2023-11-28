@@ -17,9 +17,12 @@ function TaskModal({ createOrUpdate }) {
   const [storyPoints, setStoryPoints] = useState(0);
   const [creatorUserID, setCreatorUserID] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [endDate, setEndDate] = useState();
   // const [date, setDate] = useState(new Date());
   // const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  // Get current date
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0); // Set time to the start of the day
 
   const location = useLocation();
   useEffect(() => {
@@ -31,6 +34,7 @@ function TaskModal({ createOrUpdate }) {
     if (projectIdFromUrl) {
       setProjectID(projectIdFromUrl);
     }
+
     if (taskProps) {
       console.log({ taskProps })
       setTaskProperties(taskProps);
@@ -50,6 +54,18 @@ function TaskModal({ createOrUpdate }) {
 
   const handleAssigneeChange = selectedOption => {
     setAssigneeUserID(selectedOption);
+  };
+
+  const resetForm = () => {
+    setTaskName('');
+    setTaskDescription('');
+    setStatus('');
+    setTaskTags([]);
+    setAssigneeUserID(null);
+    setPriority('low');
+    setStoryPoints(0);
+    setEndDate(null); // or set it to a default date if required
+    setIsSubmitted(false);
   };
 
   const handleSubmit = (e) => {
@@ -101,13 +117,13 @@ function TaskModal({ createOrUpdate }) {
       {isSubmitted ? (
         <>
           <h1 style={{ marginBottom: "4rem" }}>{createOrUpdate === "create" ? "Task Created" : "Task Updated"}</h1>
-          <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
+          <div style={{ display: 'flex', justifyContent: "space-between", alignItems: 'center', width: "50%" }}>
             <Link to={"/projects/" + projectID}>
               Back to Project
             </Link>
             {
               createOrUpdate === "create" && (
-                <button onClick={() => setIsSubmitted(false)} className="create-task-btn">
+                <button onClick={resetForm} className="create-task-btn">
                   Create another Task
                 </button>
               )
@@ -139,7 +155,7 @@ function TaskModal({ createOrUpdate }) {
               />
             </div>
             <div className='row'>
-              <input
+              <textarea
                 placeholder="Description"
                 value={taskDescription}
                 onChange={(e) => setTaskDescription(e.target.value)}
@@ -161,6 +177,7 @@ function TaskModal({ createOrUpdate }) {
                   selected={endDate}
                   onChange={date => setEndDate(date)}
                   endDate={endDate}
+                  minDate={currentDate} // Disable past dates
                 />
               </div>
             </div>
@@ -180,7 +197,7 @@ function TaskModal({ createOrUpdate }) {
                 onChange={(e) => setTaskTags(e.target.value.split(','))}
               />
             </div>
-            <div>
+            <div className='row'>
               <label>Priority:</label>
               <select
                 value={priority}
