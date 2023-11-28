@@ -1,6 +1,6 @@
 import './taskmodal.css';
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import UserSearchDropdown from '../UserSearchDropdown/user-search';
@@ -25,6 +25,7 @@ function TaskModal({ createOrUpdate }) {
   currentDate.setHours(0, 0, 0, 0); // Set time to the start of the day
 
   const location = useLocation();
+  const navigate = useNavigate();
   useEffect(() => {
     // Extract the projectId from the URL query parameters
     const queryParams = new URLSearchParams(location.search);
@@ -56,6 +57,10 @@ function TaskModal({ createOrUpdate }) {
     setAssigneeUserID(selectedOption);
   };
 
+  const goToProject = (projectId) => {
+    navigate(`/projects/${projectId}`);
+  }'
+
   const resetForm = () => {
     setTaskName('');
     setTaskDescription('');
@@ -66,6 +71,7 @@ function TaskModal({ createOrUpdate }) {
     setStoryPoints(0);
     setEndDate(null); // or set it to a default date if required
     setIsSubmitted(false);
+
   };
 
   const handleSubmit = (e) => {
@@ -83,7 +89,6 @@ function TaskModal({ createOrUpdate }) {
       assigneeUserID: assigneeUserID.value,
       priority: priority,
       storyPoints: storyPoints,
-      assigneeUserID: assigneeUserID?.value
     }
 
     const url = createOrUpdate === 'create' ?
@@ -110,6 +115,37 @@ function TaskModal({ createOrUpdate }) {
         console.log('Error creating new task ' + JSON.stringify(error));
         console.log(newTask);
       });
+  }
+  function deleteTaskClick() {
+    const del = {
+      taskID: taskProperties?.TaskID,
+      projectID: projectID
+    }
+    const userConfirmed = window.confirm(`Are you sure you want to delete task: ${taskProperties.taskName} ?`);
+    // TODO: apply Delete function URL in fetch below
+    // TODO: apply projectID and taskID to the body
+    // TODO: redirect to taskList after delete
+
+    if (userConfirmed) {
+      try {
+        fetch('https://pnyyqkztdopu4lohnhqytbknii0smvlv.lambda-url.us-east-1.on.aws/',
+            {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(del),
+            }
+        ).then(response => {
+
+          return response.json()
+        })
+      } catch (error) {
+        console.error("error getting DELETING task" + error);
+      }
+      goToProject(projectID)
+      console.log("Task deleted");
+    }
   }
 
   return (
@@ -217,6 +253,7 @@ function TaskModal({ createOrUpdate }) {
               />
             </div>
             <button type="submit" className='createTaskButton'>{createOrUpdate === "create" ? "Create Task" : "Update Task"}</button>
+            <button type="button" className='deleteTaskButton' onClick={deleteTaskClick}>Delete</button>
           </form></>
       )}
     </div>
